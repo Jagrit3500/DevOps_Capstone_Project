@@ -148,20 +148,8 @@ pytest -v
 
 Tests use an isolated **SQLite test database** — no PostgreSQL required in CI.
 
-```
-PASSED tests/test_candidates.py::test_root
-PASSED tests/test_candidates.py::test_health
-PASSED tests/test_candidates.py::test_create_candidate
-PASSED tests/test_candidates.py::test_create_duplicate_email_returns_409
-PASSED tests/test_candidates.py::test_list_candidates
-PASSED tests/test_candidates.py::test_get_candidate_by_id
-PASSED tests/test_candidates.py::test_get_candidate_not_found
-PASSED tests/test_candidates.py::test_update_candidate_status
-PASSED tests/test_candidates.py::test_delete_candidate
-PASSED tests/test_candidates.py::test_filter_candidates_by_status
-PASSED tests/test_candidates.py::test_get_pipeline_stats
-PASSED tests/test_candidates.py::test_update_nonexistent_candidate
-```
+The suite currently has 17 passing cases covering health, CRUD, filtering,
+statistics, duplicate emails and invalid updates.
 
 ---
 
@@ -318,7 +306,7 @@ Full docs: **http://localhost:8000/docs**
 | Module | Status |
 |--------|--------|
 | M1 - Application | Compose stack, PostgreSQL, API and frontend HTTP verified locally; [browser screenshot](evidence/local-app.png) captured |
-| M2 — Testing | 12 pytest cases passed locally |
+| M2 - Testing | 17 pytest cases passed locally |
 | M3 - Git | Repository pushed to GitHub; the rubric's 10 meaningful commit target is still pending |
 | M4 - Docker | Both images built and all three Compose services started locally; browser screenshot captured, terminal screenshot pending |
 | M5 - CI/CD | Tests, frontend build, image builds and GHCR publication passed in [audit run 38920212698](https://github.com/Jagrit3500/DevOps_Capstone_Project/actions/runs/38920212698); [earlier green run screenshot](evidence/ci-success.png) and [GHCR package screenshots](evidence/README.md) captured, EKS deploy skipped until AWS is configured |

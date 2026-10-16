@@ -59,6 +59,17 @@ def test_create_duplicate_email_returns_409(client):
     assert resp.status_code == 409
 
 
+def test_create_rejects_invalid_email(client):
+    resp = client.post("/api/candidates/", json=_sample_payload(email="not-an-email"))
+    assert resp.status_code == 422
+
+
+def test_email_is_normalized_for_duplicate_check(client):
+    client.post("/api/candidates/", json=_sample_payload(email="Person@Example.com"))
+    resp = client.post("/api/candidates/", json=_sample_payload(email="person@example.com"))
+    assert resp.status_code == 409
+
+
 def test_list_candidates(client):
     client.post("/api/candidates/", json=_sample_payload(email="list1@example.com"))
     client.post("/api/candidates/", json=_sample_payload(email="list2@example.com"))
@@ -93,6 +104,16 @@ def test_update_candidate_status(client):
     data = resp.json()
     assert data["status"] == "interview"
     assert data["priority"] == "high"
+
+
+@pytest.mark.parametrize("change", [{"name": "  "}, {"email": "bad-email"}, {"status": None}])
+def test_update_rejects_invalid_required_fields(client, change):
+    created = client.post(
+        "/api/candidates/", json=_sample_payload(email="valid-update@example.com")
+    )
+    candidate_id = created.json()["id"]
+    resp = client.put(f"/api/candidates/{candidate_id}", json=change)
+    assert resp.status_code == 422
 
 
 def test_delete_candidate(client):
