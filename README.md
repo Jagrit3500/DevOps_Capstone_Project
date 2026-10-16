@@ -312,10 +312,10 @@ Full docs: **http://localhost:8000/docs**
 |--------|--------|
 | M1 — Application | Compose stack, PostgreSQL, API and frontend HTTP verified locally; browser screenshot pending |
 | M2 — Testing | 12 pytest cases passed locally |
-| M3 — Git | No Git repository in this folder; remote/history pending |
+| M3 - Git | Repository pushed to GitHub; the rubric's 10 meaningful commit target is still pending |
 | M4 — Docker | Both images built and all three Compose services started locally; screenshot pending |
-| M5 — CI/CD | Workflow prepared; GitHub push and successful run pending |
-| M6 — DevSecOps | Trivy gate prepared; scan output pending |
+| M5 - CI/CD | Tests, frontend build, image builds and GHCR publication passed in [run 38914043177](https://github.com/Jagrit3500/DevOps_Capstone_Project/actions/runs/38914043177); EKS deploy skipped until AWS is configured |
+| M6 - DevSecOps | Both image Trivy HIGH/CRITICAL gates passed in run 38914043177; evidence screenshots pending |
 | M7 — Terraform | Configuration prepared; AWS plan/apply/destroy pending |
 | M8 — Kubernetes + Helm | Chart prepared; cluster deployment proof pending |
 | M9 — Observability | Backend `/metrics` verified locally; Prometheus target and Grafana panel pending |

@@ -4,11 +4,15 @@ The rubric requires real screenshots and a live or recorded walkthrough. Capture
 
 ## Before the cloud demo
 
-1. Provide the URL of your own GitHub repository and preserve its real commit history. The rubric asks for at least 10 meaningful commits. This local folder currently has no `.git` directory, so its history cannot be verified here.
+1. Repository: https://github.com/Jagrit3500/DevOps_Capstone_Project. Preserve its real commit history. The rubric asks for at least 10 meaningful commits; this target remains open.
 2. Start Docker Desktop. Run `docker compose up --build`, then capture the terminal showing all three services and the browser at `http://localhost:3000` with a candidate added.
 3. Run `cd backend` and `python -m pytest -v`; capture the passing test output. Open `/docs` and demonstrate create, read, update and delete. Show the PostgreSQL `candidates` table.
 4. Push to `main`. Capture the successful GitHub Actions run URL, its Trivy scan output for both images, the GHCR package pages showing SHA tags, and the commit history.
 5. Add a 2–3 sentence explanation of what Trivy scanned and what the result means. Use the actual scan result.
+
+Verified CI result: [run 38914043177](https://github.com/Jagrit3500/DevOps_Capstone_Project/actions/runs/38914043177) passed backend tests, frontend build, both image builds, both Trivy gates and GHCR publication. The EKS deploy job was skipped because the AWS repository variables are not configured yet.
+
+Trivy scanned the operating-system and installed application packages in both runtime images for HIGH and CRITICAL vulnerabilities. Both refreshed images passed the strict gate; the local scan reported zero such findings in each image, and the GitHub Actions scans also passed. Future scans can change as the vulnerability database and image tags are updated.
 
 ## AWS and Kubernetes demo
 
