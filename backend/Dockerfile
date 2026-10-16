@@ -1,9 +1,9 @@
 # syntax=docker/dockerfile:1
-FROM python:3.12-slim AS base
+FROM python:3.12-alpine3.24 AS base
 
 # Create non-root user
-RUN groupadd --gid 1001 appgroup && \
-    useradd --uid 1001 --gid appgroup --no-create-home appuser
+RUN addgroup -g 1001 -S appgroup && \
+    adduser -u 1001 -S -G appgroup -H appuser
 
 WORKDIR /app
 
