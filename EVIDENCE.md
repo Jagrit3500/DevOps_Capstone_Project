@@ -4,13 +4,13 @@ The rubric requires real screenshots and a live or recorded walkthrough. Capture
 
 ## Before the cloud demo
 
-1. Repository: https://github.com/Jagrit3500/DevOps_Capstone_Project. Preserve its real commit history. The rubric asks for at least 10 meaningful commits; this target remains open.
+1. Repository: https://github.com/Jagrit3500/DevOps_Capstone_Project. Preserve its real commit history. The rubric's target of at least 10 meaningful commits has been met; see the [GitHub history screenshot](evidence/commit-history.png).
 2. Start Docker Desktop. Copy `.env.example` to `.env` and set a local password (the current local `.env` is already set up and ignored by Git). Run `docker compose up --build`, then capture the terminal showing all three services and the browser at `http://localhost:3000` with a candidate added.
 3. Run `cd backend` and `python -m pytest -v`; capture the passing test output. Open `/docs` and demonstrate create, read, update and delete. Show the PostgreSQL `candidates` table.
 4. Push to `main`. Capture the successful GitHub Actions run URL, its Trivy scan output for both images, the GHCR package pages showing SHA tags, and the commit history.
 5. Add a 2–3 sentence explanation of what Trivy scanned and what the result means. Use the actual scan result.
 
-Verified CI result: [run 38921487642](https://github.com/Jagrit3500/DevOps_Capstone_Project/actions/runs/38921487642) passed backend tests, frontend build, both image builds, both Trivy gates and GHCR publication. The EKS deploy job was skipped because the AWS repository variables are not configured yet. The [backend](evidence/ghcr-backend.png) and [frontend](evidence/ghcr-frontend.png) GHCR screenshots show the SHA-tagged images are public. A [390px mobile screenshot](evidence/mobile-app.png) was captured with `node scripts/capture-mobile.mjs`; its viewport and document width both measured 390px.
+Verified CI result: [run 38922674760](https://github.com/Jagrit3500/DevOps_Capstone_Project/actions/runs/38922674760) passed backend tests, frontend build, both image builds, both Trivy gates and GHCR publication. The [run screenshot](evidence/ci-success.png) shows those jobs green. The EKS deploy job was skipped because the AWS repository variables are not configured yet. The [backend](evidence/ghcr-backend.png) and [frontend](evidence/ghcr-frontend.png) GHCR screenshots show the SHA-tagged images are public. A [390px mobile screenshot](evidence/mobile-app.png) was captured with `node scripts/capture-mobile.mjs`; its viewport and document width both measured 390px.
 
 Trivy scanned the operating-system and installed application packages in both runtime images for HIGH and CRITICAL vulnerabilities. Both refreshed images passed the strict gate; the local scan reported zero such findings in each image, and the GitHub Actions scans also passed. Future scans can change as the vulnerability database and image tags are updated.
 
@@ -32,9 +32,9 @@ The optional deploy job runs when `EKS_CLUSTER_NAME` is configured as a GitHub A
 
 - [x] Running application in browser at `localhost:3000`
 - [ ] `pytest -v` passing output
-- [ ] Commit history with at least 10 genuine commits
+- [x] Commit history with at least 10 genuine commits
 - [ ] `docker compose up --build` showing frontend, backend and PostgreSQL
-- [x] Successful GitHub Actions run URL
+- [x] Successful GitHub Actions run URL and screenshot
 - [x] GHCR package pages with SHA tags
 - [ ] Trivy output for both images and 2–3 sentence result explanation
 - [ ] `terraform plan` output

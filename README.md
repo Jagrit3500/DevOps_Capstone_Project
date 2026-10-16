@@ -308,9 +308,9 @@ Full docs: **http://localhost:8000/docs**
 |--------|--------|
 | M1 - Application | Compose stack, PostgreSQL, API and frontend HTTP verified locally; [browser screenshot](evidence/local-app.png) and [mobile screenshot](evidence/mobile-app.png) captured |
 | M2 - Testing | 19 pytest cases passed locally |
-| M3 - Git | Repository pushed to GitHub; the rubric's 10 meaningful commit target is still pending |
+| M3 - Git | Repository pushed to GitHub with 10 meaningful commits; [history screenshot](evidence/commit-history.png) captured |
 | M4 - Docker | Both images built and all three Compose services started locally; browser screenshot captured, terminal screenshot pending |
-| M5 - CI/CD | Tests, frontend build, image builds and GHCR publication passed in [audit run 38921487642](https://github.com/Jagrit3500/DevOps_Capstone_Project/actions/runs/38921487642); [earlier green run screenshot](evidence/ci-success.png) and [GHCR package screenshots](evidence/README.md) captured, EKS deploy skipped until AWS is configured |
+| M5 - CI/CD | Tests, frontend build, image builds and GHCR publication passed in [run 38922674760](https://github.com/Jagrit3500/DevOps_Capstone_Project/actions/runs/38922674760); [green run screenshot](evidence/ci-success.png) and [GHCR package screenshots](evidence/README.md) captured, EKS deploy skipped until AWS is configured |
 | M6 - DevSecOps | Both image Trivy HIGH/CRITICAL gates passed in run 38914043177; evidence screenshots pending |
 | M7 - Terraform | Init, fmt and validate passed locally; AWS plan/apply/destroy pending |
 | M8 — Kubernetes + Helm | Chart prepared; cluster deployment proof pending |
