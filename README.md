@@ -3,7 +3,7 @@
 > A DevOps Final Capstone Project (Session 21)  
 > Domain: **Recruitment / HR Tech SaaS**
 
-HireFlow is a full-stack, production-grade recruitment pipeline tracker that lets hiring teams manage candidates through every stage: **Applied → Screening → Interview → Offer → Hired / Rejected**.
+HireFlow is a full-stack recruitment pipeline capstone demo that lets hiring teams manage candidates through every stage: **Applied → Screening → Interview → Offer → Hired / Rejected**.
 
 ---
 
@@ -321,7 +321,7 @@ Full docs: **http://localhost:8000/docs**
 | M2 — Testing | 12 pytest cases passed locally |
 | M3 - Git | Repository pushed to GitHub; the rubric's 10 meaningful commit target is still pending |
 | M4 - Docker | Both images built and all three Compose services started locally; browser screenshot captured, terminal screenshot pending |
-| M5 - CI/CD | Tests, frontend build, image builds and GHCR publication passed in [run 38915120269](https://github.com/Jagrit3500/DevOps_Capstone_Project/actions/runs/38915120269); [run screenshot](evidence/ci-success.png) captured, EKS deploy skipped until AWS is configured |
+| M5 - CI/CD | Tests, frontend build, image builds and GHCR publication passed in [audit run 38920212698](https://github.com/Jagrit3500/DevOps_Capstone_Project/actions/runs/38920212698); [earlier green run screenshot](evidence/ci-success.png) and [GHCR package screenshots](evidence/README.md) captured, EKS deploy skipped until AWS is configured |
 | M6 - DevSecOps | Both image Trivy HIGH/CRITICAL gates passed in run 38914043177; evidence screenshots pending |
 | M7 - Terraform | Init, fmt and validate passed locally; AWS plan/apply/destroy pending |
 | M8 — Kubernetes + Helm | Chart prepared; cluster deployment proof pending |

@@ -10,7 +10,7 @@ The rubric requires real screenshots and a live or recorded walkthrough. Capture
 4. Push to `main`. Capture the successful GitHub Actions run URL, its Trivy scan output for both images, the GHCR package pages showing SHA tags, and the commit history.
 5. Add a 2–3 sentence explanation of what Trivy scanned and what the result means. Use the actual scan result.
 
-Verified CI result: [run 38914043177](https://github.com/Jagrit3500/DevOps_Capstone_Project/actions/runs/38914043177) passed backend tests, frontend build, both image builds, both Trivy gates and GHCR publication. The EKS deploy job was skipped because the AWS repository variables are not configured yet.
+Verified CI result: [run 38920212698](https://github.com/Jagrit3500/DevOps_Capstone_Project/actions/runs/38920212698) passed backend tests, frontend build, both image builds, both Trivy gates and GHCR publication. The EKS deploy job was skipped because the AWS repository variables are not configured yet. The [backend](evidence/ghcr-backend.png) and [frontend](evidence/ghcr-frontend.png) GHCR screenshots show the SHA-tagged images are public.
 
 Trivy scanned the operating-system and installed application packages in both runtime images for HIGH and CRITICAL vulnerabilities. Both refreshed images passed the strict gate; the local scan reported zero such findings in each image, and the GitHub Actions scans also passed. Future scans can change as the vulnerability database and image tags are updated.
 
@@ -30,12 +30,12 @@ The optional deploy job runs when `EKS_CLUSTER_NAME` is configured as a GitHub A
 
 ## Screenshot checklist from GRADING.md
 
-- [ ] Running application in browser at `localhost:3000`
+- [x] Running application in browser at `localhost:3000`
 - [ ] `pytest -v` passing output
 - [ ] Commit history with at least 10 genuine commits
 - [ ] `docker compose up --build` showing frontend, backend and PostgreSQL
-- [ ] Successful GitHub Actions run URL
-- [ ] GHCR package pages with SHA tags
+- [x] Successful GitHub Actions run URL
+- [x] GHCR package pages with SHA tags
 - [ ] Trivy output for both images and 2–3 sentence result explanation
 - [ ] `terraform plan` output
 - [ ] AWS Console VPC and EKS cluster in the expected region
