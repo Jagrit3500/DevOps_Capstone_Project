@@ -1,0 +1,92 @@
+# Grafana Helm values for HireFlow monitoring
+# Install: helm upgrade --install grafana grafana/grafana \
+#   -n monitoring --create-namespace -f monitoring/grafana-values.yaml
+
+adminUser: admin
+# Override adminPassword via --set grafana.adminPassword=<your-password>
+# or a Kubernetes Secret — never hardcode in this file
+
+persistence:
+  enabled: true
+  size: 5Gi
+
+service:
+  type: LoadBalancer
+  port: 80
+
+datasources:
+  datasources.yaml:
+    apiVersion: 1
+    datasources:
+      - name: Prometheus
+        type: prometheus
+        url: http://prometheus-server.monitoring.svc.cluster.local
+        access: proxy
+        isDefault: true
+
+dashboardProviders:
+  dashboardproviders.yaml:
+    apiVersion: 1
+    providers:
+      - name: hireflow
+        orgId: 1
+        folder: HireFlow
+        type: file
+        disableDeletion: false
+        editable: true
+        options:
+          path: /var/lib/grafana/dashboards/hireflow
+
+dashboards:
+  hireflow:
+    hireflow-overview:
+      json: |
+        {
+          "title": "HireFlow — Application Overview",
+          "panels": [
+            {
+              "id": 1,
+              "title": "HTTP Requests / sec",
+              "type": "timeseries",
+              "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0},
+              "targets": [
+                {
+                  "expr": "rate(http_requests_total{job=\"hireflow-backend\"}[5m])",
+                  "legendFormat": "{{method}} {{handler}}"
+                }
+              ]
+            },
+            {
+              "id": 2,
+              "title": "Request Latency p95",
+              "type": "timeseries",
+              "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0},
+              "targets": [
+                {
+                  "expr": "histogram_quantile(0.95, rate(http_request_duration_seconds_bucket{job=\"hireflow-backend\"}[5m]))",
+                  "legendFormat": "p95 latency"
+                }
+              ]
+            },
+            {
+              "id": 3,
+              "title": "Error Rate",
+              "type": "stat",
+              "gridPos": {"h": 6, "w": 12, "x": 0, "y": 8},
+              "targets": [
+                {
+                  "expr": "rate(http_requests_total{job=\"hireflow-backend\",status=\"5xx\"}[5m])",
+                  "legendFormat": "5xx errors/sec"
+                }
+              ]
+            }
+          ],
+          "schemaVersion": 38,
+          "version": 1
+        }
+
+grafana.ini:
+  server:
+    root_url: "%(protocol)s://%(domain)s/"
+  auth.anonymous:
+    enabled: false

@@ -1,0 +1,55 @@
+replicaCount: 2
+
+registry: ghcr.io/YOUR_GITHUB_USERNAME
+
+backend:
+  image: hireflow-backend
+  tag: latest
+  port: 8000
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  env:
+    DATABASE_URL: "postgresql+psycopg://hireflow:hireflow@postgres:5432/hireflow"
+
+frontend:
+  image: hireflow-frontend
+  tag: latest
+  port: 8080
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 128Mi
+
+postgres:
+  image: postgres:16-alpine
+  user: hireflow
+  password: hireflow
+  database: hireflow
+  port: 5432
+  storage: 5Gi
+
+ingress:
+  enabled: true
+  className: nginx
+  host: hireflow.example.com
+  annotations: {}
+
+hpa:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 8
+  targetCPUUtilizationPercentage: 70
+
+serviceAccount:
+  create: true
+  name: hireflow
+
+namespace: hireflow

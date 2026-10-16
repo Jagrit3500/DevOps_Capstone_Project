@@ -1,0 +1,51 @@
+# Python & virtual environments
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Environment / secrets — NEVER commit these
+.env
+.env.local
+.env.*.local
+*.env
+
+# Test artifacts
+.pytest_cache/
+.coverage
+htmlcov/
+test_hireflow.db
+
+# Node / frontend
+node_modules/
+frontend/dist/
+frontend/.vite/
+
+# Terraform state & secrets
+terraform/.terraform/
+terraform/terraform.tfstate
+terraform/terraform.tfstate.backup
+terraform/.terraform.lock.hcl
+terraform/terraform.tfvars
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+*.tar
+
+# AWS credentials — extra safety net
+.aws/credentials
+credentials
