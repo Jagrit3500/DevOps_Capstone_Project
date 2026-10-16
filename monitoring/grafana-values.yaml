@@ -9,6 +9,7 @@ adminUser: admin
 persistence:
   enabled: true
   size: 5Gi
+  storageClassName: hireflow-gp3
 
 service:
   type: LoadBalancer

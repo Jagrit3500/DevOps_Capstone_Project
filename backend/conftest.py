@@ -5,6 +5,10 @@ Uses a dedicated SQLite test database so tests run without a PostgreSQL instance
 The conftest patches both `get_db` (used by route handlers) and
 `app.main.SessionLocal` (used by the /ready endpoint) with SQLite sessions.
 """
+import os
+
+os.environ["DATABASE_URL"] = "sqlite:///./test_hireflow.db"
+
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine

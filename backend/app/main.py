@@ -2,7 +2,6 @@ import os
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
 from prometheus_fastapi_instrumentator import Instrumentator
 from sqlalchemy import text
 
@@ -122,14 +121,6 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
 Instrumentator().instrument(app).expose(app, endpoint="/metrics")
 app.include_router(router)
 
@@ -153,9 +144,8 @@ def health():
 def ready():
     """Kubernetes readiness probe — verifies DB is reachable."""
     try:
-        db = SessionLocal()
-        db.execute(text("SELECT 1"))
-        db.close()
+        with SessionLocal() as db:
+            db.execute(text("SELECT 1"))
         return {"status": "ready", "database": "connected"}
-    except Exception as exc:
-        raise HTTPException(status_code=503, detail=f"Database not reachable: {exc}")
+    except Exception:
+        raise HTTPException(status_code=503, detail="Database not reachable")

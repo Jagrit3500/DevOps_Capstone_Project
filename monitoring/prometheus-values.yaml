@@ -6,6 +6,7 @@ server:
   persistentVolume:
     enabled: true
     size: 8Gi
+    storageClass: hireflow-gp3
 
   retention: "15d"
 

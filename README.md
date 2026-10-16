@@ -99,6 +99,8 @@ DevOps_Project/
 - Docker Compose
 
 ```bash
+cp .env.example .env
+# Replace the placeholder password in .env before starting the stack.
 docker compose up --build
 ```
 
@@ -129,7 +131,8 @@ python -m venv .venv
 source .venv/bin/activate        # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 
-export DATABASE_URL='postgresql+psycopg://hireflow:hireflow@localhost:5432/hireflow'
+# Set DB_USER, DB_PASSWORD, DB_HOST and DB_NAME in your shell,
+# or provide a complete DATABASE_URL. Never commit a real password.
 alembic upgrade head
 uvicorn app.main:app --reload --port 8000
 ```
@@ -235,14 +238,17 @@ terraform destroy
 # Apply namespace
 kubectl apply -f k8s/namespace.yaml
 
+# Terraform installs the EBS CSI driver for persistent volumes.
 # Install an Ingress controller and Metrics Server in the cluster first.
-# Make the GHCR packages public, or configure image pull credentials.
-# Install app (the Helm hook runs Alembic migrations)
+# Create a hireflow-db Secret in this namespace with a password key.
+# Make the GHCR packages public, or configure imagePullSecrets in Helm values.
+# Each backend Pod runs serialized Alembic migrations before starting.
 helm upgrade --install hireflow ./helm/hireflow \
   --namespace hireflow \
-  --set registry=ghcr.io/YOUR_GITHUB_USERNAME \
+  --set registry=ghcr.io/jagrit3500 \
   --set backend.tag=<sha> \
-  --set frontend.tag=<sha>
+  --set frontend.tag=<sha> \
+  --wait
 
 # Verify
 kubectl get pods -n hireflow
@@ -300,7 +306,8 @@ Full docs: **http://localhost:8000/docs**
 
 - Docker images run as **non-root** users
 - **Trivy** scans every image build — HIGH/CRITICAL CVEs fail the pipeline
-- The Docker Compose and Helm database passwords are classroom demo values; replace them before any public deployment
+- Compose reads the local password from ignored `.env`; Helm reads it from an existing Kubernetes Secret
+- This classroom API has no user authentication; use sample data only until access control is added
 - `.gitignore` excludes `.env`, `__pycache__`, `node_modules`, `.venv`, `terraform.tfvars`
 - AWS credentials must **never** be committed to Git
 
@@ -310,13 +317,13 @@ Full docs: **http://localhost:8000/docs**
 
 | Module | Status |
 |--------|--------|
-| M1 — Application | Compose stack, PostgreSQL, API and frontend HTTP verified locally; browser screenshot pending |
+| M1 - Application | Compose stack, PostgreSQL, API and frontend HTTP verified locally; [browser screenshot](evidence/local-app.png) captured |
 | M2 — Testing | 12 pytest cases passed locally |
 | M3 - Git | Repository pushed to GitHub; the rubric's 10 meaningful commit target is still pending |
-| M4 — Docker | Both images built and all three Compose services started locally; screenshot pending |
-| M5 - CI/CD | Tests, frontend build, image builds and GHCR publication passed in [run 38914043177](https://github.com/Jagrit3500/DevOps_Capstone_Project/actions/runs/38914043177); EKS deploy skipped until AWS is configured |
+| M4 - Docker | Both images built and all three Compose services started locally; browser screenshot captured, terminal screenshot pending |
+| M5 - CI/CD | Tests, frontend build, image builds and GHCR publication passed in [run 38915120269](https://github.com/Jagrit3500/DevOps_Capstone_Project/actions/runs/38915120269); [run screenshot](evidence/ci-success.png) captured, EKS deploy skipped until AWS is configured |
 | M6 - DevSecOps | Both image Trivy HIGH/CRITICAL gates passed in run 38914043177; evidence screenshots pending |
-| M7 — Terraform | Configuration prepared; AWS plan/apply/destroy pending |
+| M7 - Terraform | Init, fmt and validate passed locally; AWS plan/apply/destroy pending |
 | M8 — Kubernetes + Helm | Chart prepared; cluster deployment proof pending |
 | M9 — Observability | Backend `/metrics` verified locally; Prometheus target and Grafana panel pending |
 | M10 — Documentation | README present; live or recorded demonstration pending |

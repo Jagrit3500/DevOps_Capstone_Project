@@ -1,6 +1,7 @@
 replicaCount: 2
 
 registry: ghcr.io/YOUR_GITHUB_USERNAME
+imagePullSecrets: []
 
 backend:
   image: hireflow-backend
@@ -13,8 +14,6 @@ backend:
     limits:
       cpu: 500m
       memory: 512Mi
-  env:
-    DATABASE_URL: "postgresql+psycopg://hireflow:hireflow@postgres:5432/hireflow"
 
 frontend:
   image: hireflow-frontend
@@ -31,15 +30,16 @@ frontend:
 postgres:
   image: postgres:16-alpine
   user: hireflow
-  password: hireflow
   database: hireflow
+  existingSecret: hireflow-db
   port: 5432
   storage: 5Gi
+  storageClassName: hireflow-gp3
 
 ingress:
   enabled: true
   className: nginx
-  host: hireflow.example.com
+  host: ""
   annotations: {}
 
 hpa:

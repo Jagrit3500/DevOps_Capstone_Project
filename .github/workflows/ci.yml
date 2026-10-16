@@ -107,6 +107,10 @@ jobs:
           aws-region: ${{ vars.AWS_REGION }}
       - name: Configure kubectl
         run: aws eks update-kubeconfig --region "${{ vars.AWS_REGION }}" --name "${{ vars.EKS_CLUSTER_NAME }}"
+      - name: Verify database secret and Ingress controller
+        run: |
+          kubectl get secret hireflow-db -n hireflow
+          kubectl get ingressclass nginx
       - uses: azure/setup-helm@v4
       - name: Set lowercase registry
         id: registry

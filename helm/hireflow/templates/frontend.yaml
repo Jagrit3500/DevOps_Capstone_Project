@@ -17,6 +17,10 @@ spec:
         app: frontend
     spec:
       serviceAccountName: {{ .Values.serviceAccount.name }}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
         - name: frontend
           image: {{ .Values.registry }}/{{ .Values.frontend.image }}:{{ .Values.frontend.tag }}

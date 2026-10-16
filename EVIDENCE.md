@@ -5,7 +5,7 @@ The rubric requires real screenshots and a live or recorded walkthrough. Capture
 ## Before the cloud demo
 
 1. Repository: https://github.com/Jagrit3500/DevOps_Capstone_Project. Preserve its real commit history. The rubric asks for at least 10 meaningful commits; this target remains open.
-2. Start Docker Desktop. Run `docker compose up --build`, then capture the terminal showing all three services and the browser at `http://localhost:3000` with a candidate added.
+2. Start Docker Desktop. Copy `.env.example` to `.env` and set a local password (the current local `.env` is already set up and ignored by Git). Run `docker compose up --build`, then capture the terminal showing all three services and the browser at `http://localhost:3000` with a candidate added.
 3. Run `cd backend` and `python -m pytest -v`; capture the passing test output. Open `/docs` and demonstrate create, read, update and delete. Show the PostgreSQL `candidates` table.
 4. Push to `main`. Capture the successful GitHub Actions run URL, its Trivy scan output for both images, the GHCR package pages showing SHA tags, and the commit history.
 5. Add a 2–3 sentence explanation of what Trivy scanned and what the result means. Use the actual scan result.
@@ -17,16 +17,16 @@ Trivy scanned the operating-system and installed application packages in both ru
 ## AWS and Kubernetes demo
 
 1. Install and configure Terraform, AWS CLI, Helm and kubectl. Use your own AWS account in the expected region. In `terraform/`, run `terraform init`, `terraform fmt -check`, `terraform validate`, `terraform plan` and `terraform apply`. Capture the nonempty plan and AWS Console views of the VPC and EKS cluster.
-2. Run the `kubeconfig_command` Terraform output. Install an Ingress controller and Metrics Server. Ensure GHCR packages are public or configure image pull credentials.
-3. Apply `k8s/namespace.yaml`; install `helm/hireflow` with your GHCR owner and exact commit SHA. Capture `kubectl get pods -n hireflow`, `kubectl get svc -n hireflow`, `helm list -n hireflow`, `kubectl get hpa -n hireflow`, and the app opened through the Ingress address. Show at least two ready frontend Pods and two ready backend Pods.
+2. Run the `kubeconfig_command` Terraform output. Terraform installs the EBS CSI add-on for the application's PVC. Install an Ingress controller and Metrics Server. Ensure GHCR packages are public or configure Helm `imagePullSecrets`.
+3. Apply `k8s/namespace.yaml`. Create a `hireflow-db` Secret in the namespace with a `password` key and a fresh password not used for the local demo; do not commit it. Install `helm/hireflow` with `--wait`, your GHCR owner and exact commit SHA. Capture `kubectl get pods -n hireflow`, `kubectl get svc -n hireflow`, `helm list -n hireflow`, `kubectl get hpa -n hireflow`, and the app opened through the Ingress address. Show at least two ready frontend Pods and two ready backend Pods.
 4. Install Prometheus and Grafana with the values in `monitoring/`. Generate some requests using `scripts/load-test.sh`. Capture `/metrics`, the Prometheus Targets page with `hireflow-backend` UP, and the HireFlow Grafana dashboard with a populated request or latency panel.
 5. Demonstrate troubleshooting using the separate `troubleshooting/broken-image.yaml` and `troubleshooting/broken-service.yaml` resources. Explain ImagePullBackOff and the Service with no endpoints. Remove those demo resources after showing them.
 6. Demonstrate a real commit reaching the pipeline, publishing images, and updating the EKS deployment. Record the walkthrough if a live presentation is unavailable.
-7. After all deployment evidence is captured, run `terraform destroy` and capture its successful completion. Confirm the EKS cluster, NAT gateway and associated resources are gone.
+7. After all deployment evidence is captured, uninstall the application and monitoring Helm releases, then delete remaining PVCs. Run `terraform destroy` and capture its successful completion. Confirm the EKS cluster, EBS volumes, NAT gateway and associated resources are gone.
 
 ## GitHub Actions deployment variables
 
-The optional deploy job runs when `EKS_CLUSTER_NAME` is configured as a GitHub Actions repository variable. Also configure `AWS_REGION` and `AWS_ROLE_ARN`. The AWS role must trust this repository's GitHub OIDC identity and allow EKS access. Without these variables, the test, build, scan and publish jobs still run, but the deploy job is skipped.
+The optional deploy job runs when `EKS_CLUSTER_NAME` is configured as a GitHub Actions repository variable. Also configure `AWS_REGION` and `AWS_ROLE_ARN`. The AWS role must trust this repository's GitHub OIDC identity on `main` and have EKS access. Create the `hireflow-db` Secret and install the Ingress controller before enabling the deploy job; it checks both. Without these variables, the test, build, scan and publish jobs still run, but the deploy job is skipped.
 
 ## Screenshot checklist from GRADING.md
 
