@@ -3,7 +3,7 @@
 #   -n monitoring --create-namespace -f monitoring/grafana-values.yaml
 
 adminUser: admin
-# Override adminPassword via --set grafana.adminPassword=<your-password>
+# Override adminPassword via --set adminPassword=<your-password>
 # or a Kubernetes Secret — never hardcode in this file
 
 persistence:

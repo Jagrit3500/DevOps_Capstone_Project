@@ -148,8 +148,8 @@ pytest -v
 
 Tests use an isolated **SQLite test database** — no PostgreSQL required in CI.
 
-The suite currently has 17 passing cases covering health, CRUD, filtering,
-statistics, duplicate emails and invalid updates.
+The suite currently has 19 passing cases covering health, CRUD, filtering,
+statistics, duplicate emails, invalid updates and demo-seed configuration.
 
 ---
 
@@ -295,6 +295,7 @@ Full docs: **http://localhost:8000/docs**
 - Docker images run as **non-root** users
 - **Trivy** scans every image build — HIGH/CRITICAL CVEs fail the pipeline
 - Compose reads the local password from ignored `.env`; Helm reads it from an existing Kubernetes Secret
+- Sample candidates are seeded only when `SEED_DEMO_DATA=true` (set by local Compose); cloud deployments start empty
 - This classroom API has no user authentication; use sample data only until access control is added
 - `.gitignore` excludes `.env`, `__pycache__`, `node_modules`, `.venv`, `terraform.tfvars`
 - AWS credentials must **never** be committed to Git
@@ -305,11 +306,11 @@ Full docs: **http://localhost:8000/docs**
 
 | Module | Status |
 |--------|--------|
-| M1 - Application | Compose stack, PostgreSQL, API and frontend HTTP verified locally; [browser screenshot](evidence/local-app.png) captured |
-| M2 - Testing | 17 pytest cases passed locally |
+| M1 - Application | Compose stack, PostgreSQL, API and frontend HTTP verified locally; [browser screenshot](evidence/local-app.png) and [mobile screenshot](evidence/mobile-app.png) captured |
+| M2 - Testing | 19 pytest cases passed locally |
 | M3 - Git | Repository pushed to GitHub; the rubric's 10 meaningful commit target is still pending |
 | M4 - Docker | Both images built and all three Compose services started locally; browser screenshot captured, terminal screenshot pending |
-| M5 - CI/CD | Tests, frontend build, image builds and GHCR publication passed in [audit run 38920212698](https://github.com/Jagrit3500/DevOps_Capstone_Project/actions/runs/38920212698); [earlier green run screenshot](evidence/ci-success.png) and [GHCR package screenshots](evidence/README.md) captured, EKS deploy skipped until AWS is configured |
+| M5 - CI/CD | Tests, frontend build, image builds and GHCR publication passed in [audit run 38921487642](https://github.com/Jagrit3500/DevOps_Capstone_Project/actions/runs/38921487642); [earlier green run screenshot](evidence/ci-success.png) and [GHCR package screenshots](evidence/README.md) captured, EKS deploy skipped until AWS is configured |
 | M6 - DevSecOps | Both image Trivy HIGH/CRITICAL gates passed in run 38914043177; evidence screenshots pending |
 | M7 - Terraform | Init, fmt and validate passed locally; AWS plan/apply/destroy pending |
 | M8 — Kubernetes + Helm | Chart prepared; cluster deployment proof pending |

@@ -106,7 +106,8 @@ def _seed_data() -> None:
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    _seed_data()
+    if os.getenv("SEED_DEMO_DATA", "false").lower() in {"1", "true", "yes"}:
+        _seed_data()
     yield
 
 
