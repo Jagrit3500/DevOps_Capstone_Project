@@ -1,0 +1,57 @@
+Captured: 2026-10-19 02:16:38 +05:30
+
+kubectl get nodes
+NAME                                         STATUS   ROLES    AGE   VERSION
+ip-10-0-10-171.ap-south-1.compute.internal   Ready    <none>   33h   v1.35.8-eks-b9510e3
+ip-10-0-11-51.ap-south-1.compute.internal    Ready    <none>   33h   v1.35.8-eks-b9510e3
+
+
+kubectl get pods,svc,pvc,hpa -n hireflow
+NAME                           READY   STATUS    RESTARTS   AGE
+pod/backend-67864b54db-dns8c   1/1     Running   0          31h
+pod/backend-67864b54db-m24dd   1/1     Running   0          31h
+pod/frontend-95554477d-l99ww   1/1     Running   0          31h
+pod/frontend-95554477d-vnjmx   1/1     Running   0          31h
+pod/postgres-0                 1/1     Running   0          31h
+
+NAME               TYPE           CLUSTER-IP       EXTERNAL-IP                                                                      PORT(S)        AGE
+service/backend    ClusterIP      172.20.244.6     <none>                                                                           8000/TCP       31h
+service/frontend   LoadBalancer   172.20.255.175   a5a9e213334bf46d88706c3de5da57dd-4f5e5a99f16e0430.elb.ap-south-1.amazonaws.com   80:31267/TCP   31h
+service/postgres   ClusterIP      172.20.22.96     <none>                                                                           5432/TCP       31h
+
+NAME                                             STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   VOLUMEATTRIBUTESCLASS   AGE
+persistentvolumeclaim/postgres-data-postgres-0   Bound    pvc-d1205881-d11d-496b-bb66-d6cdf7aa4ffc   5Gi        RWO            hireflow-gp3   <unset>                 33h
+
+NAME                                               REFERENCE             TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
+horizontalpodautoscaler.autoscaling/backend-hpa    Deployment/backend    cpu: 2%/70%   2         8         2          31h
+horizontalpodautoscaler.autoscaling/frontend-hpa   Deployment/frontend   cpu: 2%/70%   2         8         2          31h
+
+
+kubectl get pods,pvc -n monitoring
+NAME                                                 READY   STATUS    RESTARTS   AGE
+pod/grafana-55cdb8d665-ckdfn                         1/1     Running   0          26h
+pod/prometheus-kube-state-metrics-798fb7d7b8-cjqxm   1/1     Running   0          30h
+pod/prometheus-prometheus-node-exporter-nbhg8        1/1     Running   0          30h
+pod/prometheus-prometheus-node-exporter-w4qgc        1/1     Running   0          30h
+pod/prometheus-server-6fd5d9778f-l42nl               2/2     Running   0          30h
+
+NAME                                      STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   VOLUMEATTRIBUTESCLASS   AGE
+persistentvolumeclaim/grafana             Bound    pvc-3dcacda9-2475-4c8a-a334-47db02d36b8e   5Gi        RWO            hireflow-gp3   <unset>                 30h
+persistentvolumeclaim/prometheus-server   Bound    pvc-6f7ccfa5-cd06-41fd-a493-a3eb4cf6f551   8Gi        RWO            hireflow-gp3   <unset>                 30h
+
+
+kubectl top nodes
+NAME                                         CPU(cores)   CPU(%)   MEMORY(bytes)   MEMORY(%)
+ip-10-0-10-171.ap-south-1.compute.internal   48m          2%       1371Mi          43%
+ip-10-0-11-51.ap-south-1.compute.internal    68m          3%       1910Mi          60%
+
+
+helm list -n hireflow
+NAME    	NAMESPACE	REVISION	UPDATED                              	STATUS  	CHART         	APP VERSION
+hireflow	hireflow 	1       	2026-10-17 18:27:46.2172887 +0530 IST	deployed	hireflow-1.0.0	1.0.0
+
+
+helm list -n monitoring
+NAME      	NAMESPACE 	REVISION	UPDATED                              	STATUS  	CHART             	APP VERSION
+grafana   	monitoring	2       	2026-10-17 23:33:05.8100664 +0530 IST	deployed	grafana-14.0.1    	13.2.4
+prometheus	monitoring	1       	2026-10-17 19:43:56.391178 +0530 IST 	deployed	prometheus-29.37.0	v3.15.0

@@ -43,7 +43,7 @@ variable "eks_cluster_version" {
 variable "node_group_instance_types" {
   description = "EC2 instance types for EKS worker nodes"
   type        = list(string)
-  default     = ["t3.medium"]
+  default     = ["c7i-flex.large"]
 }
 
 variable "node_group_min_size" {
@@ -62,4 +62,16 @@ variable "node_group_desired_size" {
   description = "Desired number of EKS worker nodes"
   type        = number
   default     = 2
+}
+
+variable "github_repository" {
+  description = "GitHub owner/repository allowed to deploy to EKS through OIDC"
+  type        = string
+  default     = "Jagrit3500/DevOps_Capstone_Project"
+}
+
+variable "github_deploy_branch" {
+  description = "GitHub branch allowed to assume the EKS deploy role"
+  type        = string
+  default     = "main"
 }

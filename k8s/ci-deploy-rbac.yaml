@@ -1,0 +1,38 @@
+# The GitHub OIDC IAM role maps to the hireflow:ci-deploy group in aws-auth.
+# Namespace administration is needed for Helm release Secrets and workload updates.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: hireflow-ci-deploy
+  namespace: hireflow
+subjects:
+  - kind: Group
+    name: hireflow:ci-deploy
+    apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: ClusterRole
+  name: admin
+  apiGroup: rbac.authorization.k8s.io
+---
+# The HireFlow Helm chart also owns a cluster-scoped EBS StorageClass.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: hireflow-ci-storageclass
+rules:
+  - apiGroups: ["storage.k8s.io"]
+    resources: ["storageclasses"]
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: hireflow-ci-storageclass
+subjects:
+  - kind: Group
+    name: hireflow:ci-deploy
+    apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: ClusterRole
+  name: hireflow-ci-storageclass
+  apiGroup: rbac.authorization.k8s.io

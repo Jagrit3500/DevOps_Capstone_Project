@@ -187,6 +187,8 @@ ghcr.io/<owner>/hireflow-backend:<sha>
 ghcr.io/<owner>/hireflow-frontend:<sha>
 ```
 
+The deploy job uses GitHub OIDC to assume a repository-and-`main`-branch-scoped AWS role; it stores no long-lived AWS key. Terraform creates the OIDC provider and role. The role can only describe this EKS cluster through IAM. EKS `aws-auth` maps it to the `hireflow:ci-deploy` group, and [CI RBAC](k8s/ci-deploy-rbac.yaml) grants namespace administration plus the StorageClass permissions needed by this Helm chart. Run `scripts/configure-ci-eks-access.ps1` with the Terraform `github_actions_role_arn` output after applying the RBAC manifest. The `hireflow` namespace and `hireflow-db` Secret must exist before enabling the deploy job. Repository Actions variables are `AWS_REGION`, `EKS_CLUSTER_NAME`, and `AWS_ROLE_ARN`.
+
 ---
 
 ## 🏗️ Infrastructure (Terraform)
@@ -201,7 +203,7 @@ Provisions AWS resources:
 | Internet Gateway | For public subnets |
 | NAT Gateway | For private subnet egress |
 | EKS Cluster | Kubernetes 1.35 |
-| Node Group | t3.medium, min 1 / max 4 / desired 2 |
+| Node Group | c7i-flex.large, min 1 / max 4 / desired 2 |
 
 ```bash
 cd terraform
@@ -226,11 +228,11 @@ terraform destroy
 # Apply namespace
 kubectl apply -f k8s/namespace.yaml
 
-# Terraform installs the EBS CSI driver for persistent volumes.
-# Install an Ingress controller and Metrics Server in the cluster first.
+# Terraform installs the EBS CSI driver for persistent volumes and Metrics Server for the HPA.
+# The frontend Service creates a public AWS load balancer; its Nginx proxies API requests to the backend.
 # Create a hireflow-db Secret in this namespace with a password key.
 # Make the GHCR packages public, or configure imagePullSecrets in Helm values.
-# Each backend Pod runs serialized Alembic migrations before starting.
+# Each backend Pod runs Alembic migrations before starting.
 helm upgrade --install hireflow ./helm/hireflow \
   --namespace hireflow \
   --set registry=ghcr.io/jagrit3500 \
@@ -242,6 +244,7 @@ helm upgrade --install hireflow ./helm/hireflow \
 kubectl get pods -n hireflow
 kubectl get svc -n hireflow
 helm list -n hireflow
+# Open http://<frontend EXTERNAL-IP/DNS> after the load balancer is ready.
 ```
 
 ---
@@ -251,22 +254,25 @@ helm list -n hireflow
 ```bash
 # Add Helm repos
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
-helm repo add grafana https://grafana.github.io/helm-charts
+helm repo add grafana-community https://grafana-community.github.io/helm-charts
 helm repo update
 
 # Install Prometheus
 helm upgrade --install prometheus prometheus-community/prometheus \
   -n monitoring --create-namespace \
-  -f monitoring/prometheus-values.yaml
+  -f monitoring/prometheus-values.yaml --wait --timeout 10m
 
 # Install Grafana
-helm upgrade --install grafana grafana/grafana \
+helm upgrade --install grafana grafana-community/grafana \
   -n monitoring \
-  -f monitoring/grafana-values.yaml \
-  --set adminPassword=<your-secure-password>
+  -f monitoring/grafana-values.yaml --wait --timeout 10m
 
-# Check metrics
-curl http://localhost:8000/metrics
+# Access each UI locally in a separate terminal; Grafana is not publicly exposed.
+kubectl port-forward -n monitoring svc/prometheus-server 9090:80
+kubectl port-forward -n monitoring svc/grafana 3000:80
+# Prometheus targets: http://localhost:9090/targets
+# Grafana dashboard: http://localhost:3000
+# Grafana's admin password is stored in the grafana Secret in the monitoring namespace.
 ```
 
 ---
@@ -307,12 +313,12 @@ Full docs: **http://localhost:8000/docs**
 | Module | Status |
 |--------|--------|
 | M1 - Application | Compose stack, PostgreSQL, API and frontend HTTP verified locally; [browser screenshot](evidence/local-app.png) and [mobile screenshot](evidence/mobile-app.png) captured |
-| M2 - Testing | 19 pytest cases passed locally |
+| M2 - Testing | 19 pytest cases passed locally; [test screenshot](evidence/pytest-passing.png) captured |
 | M3 - Git | Repository pushed to GitHub with 10 meaningful commits; [history screenshot](evidence/commit-history.png) captured |
-| M4 - Docker | Both images built and all three Compose services started locally; browser screenshot captured, terminal screenshot pending |
-| M5 - CI/CD | Tests, frontend build, image builds and GHCR publication passed in [run 38922674760](https://github.com/Jagrit3500/DevOps_Capstone_Project/actions/runs/38922674760); [green run screenshot](evidence/ci-success.png) and [GHCR package screenshots](evidence/README.md) captured, EKS deploy skipped until AWS is configured |
-| M6 - DevSecOps | Both image Trivy HIGH/CRITICAL gates passed in run 38914043177; evidence screenshots pending |
-| M7 - Terraform | Init, fmt and validate passed locally; AWS plan/apply/destroy pending |
-| M8 — Kubernetes + Helm | Chart prepared; cluster deployment proof pending |
-| M9 — Observability | Backend `/metrics` verified locally; Prometheus target and Grafana panel pending |
+| M4 - Docker | Both images built and all three Compose services started locally; [build screenshot](evidence/compose-build-start.png) and [services/database screenshot](evidence/docker-services-database.png) captured |
+| M5 - CI/CD | Tests, frontend build, image builds and GHCR publication passed in [run 38922674760](https://github.com/Jagrit3500/DevOps_Capstone_Project/actions/runs/38922674760); [green run](evidence/ci-success.png), [backend package](evidence/ghcr-backend.png), and [frontend package](evidence/ghcr-frontend.png) captured. Automatic EKS deployment remains unconfigured. |
+| M6 - DevSecOps | Both image Trivy HIGH/CRITICAL gates passed; [backend](evidence/trivy-backend-summary.png) and [frontend](evidence/trivy-frontend-summary.png) scan screenshots captured |
+| M7 - Terraform | VPC, EKS, EBS CSI, and Metrics Server applied in `ap-south-1`; fmt, validate, and [a captured no-drift plan](evidence/terraform-current-plan.txt) passed. AWS Console screenshots and teardown proof remain. |
+| M8 — Kubernetes + Helm | `hireflow` Helm release deployed on EKS; two backend and two frontend Pods ready, PostgreSQL running, HPA metrics present. [Cluster output](evidence/eks-status.txt) and [live app screenshot](evidence/live-eks-app.png) captured. |
+| M9 — Observability | Prometheus target UP and Grafana application panels populated; [metrics](evidence/backend-metrics.txt), [Prometheus](evidence/prometheus-targets.png), and [Grafana](evidence/grafana-dashboard.png) evidence captured. |
 | M10 — Documentation | README present; live or recorded demonstration pending |

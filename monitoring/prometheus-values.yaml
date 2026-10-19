@@ -15,15 +15,15 @@ server:
     evaluation_interval: 15s
 
 alertmanager:
-  enabled: true
-
-pushgateway:
   enabled: false
 
-nodeExporter:
+prometheus-pushgateway:
+  enabled: false
+
+prometheus-node-exporter:
   enabled: true
 
-kubeStateMetrics:
+kube-state-metrics:
   enabled: true
 
 scrapeConfigs:

@@ -1,10 +1,9 @@
 # Grafana Helm values for HireFlow monitoring
-# Install: helm upgrade --install grafana grafana/grafana \
+# Install: helm upgrade --install grafana grafana-community/grafana \
 #   -n monitoring --create-namespace -f monitoring/grafana-values.yaml
 
 adminUser: admin
-# Override adminPassword via --set adminPassword=<your-password>
-# or a Kubernetes Secret — never hardcode in this file
+# Helm creates a random admin password in a Kubernetes Secret.
 
 persistence:
   enabled: true
@@ -12,7 +11,7 @@ persistence:
   storageClassName: hireflow-gp3
 
 service:
-  type: LoadBalancer
+  type: ClusterIP
   port: 80
 
 datasources:
@@ -21,6 +20,7 @@ datasources:
     datasources:
       - name: Prometheus
         type: prometheus
+        uid: prometheus
         url: http://prometheus-server.monitoring.svc.cluster.local
         access: proxy
         isDefault: true
@@ -52,8 +52,8 @@ dashboards:
               "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0},
               "targets": [
                 {
-                  "expr": "rate(http_requests_total{job=\"hireflow-backend\"}[5m])",
-                  "legendFormat": "{{method}} {{handler}}"
+                  "expr": "sum by (handler) (rate(http_requests_total{job=\"hireflow-backend\"}[5m]))",
+                  "legendFormat": "{{handler}}"
                 }
               ]
             },
@@ -64,7 +64,7 @@ dashboards:
               "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0},
               "targets": [
                 {
-                  "expr": "histogram_quantile(0.95, rate(http_request_duration_seconds_bucket{job=\"hireflow-backend\"}[5m]))",
+                  "expr": "histogram_quantile(0.95, sum by (le) (rate(http_request_duration_seconds_bucket{job=\"hireflow-backend\"}[5m])))",
                   "legendFormat": "p95 latency"
                 }
               ]
@@ -76,7 +76,7 @@ dashboards:
               "gridPos": {"h": 6, "w": 12, "x": 0, "y": 8},
               "targets": [
                 {
-                  "expr": "rate(http_requests_total{job=\"hireflow-backend\",status=\"5xx\"}[5m])",
+                  "expr": "sum(rate(http_requests_total{job=\"hireflow-backend\",status=\"5xx\"}[5m])) or vector(0)",
                   "legendFormat": "5xx errors/sec"
                 }
               ]

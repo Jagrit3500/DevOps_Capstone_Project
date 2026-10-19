@@ -136,6 +136,13 @@ resource "aws_eks_addon" "pod_identity_agent" {
   depends_on   = [aws_eks_node_group.workers]
 }
 
+# The HPA needs the Kubernetes resource metrics API.
+resource "aws_eks_addon" "metrics_server" {
+  cluster_name = aws_eks_cluster.main.name
+  addon_name   = "metrics-server"
+  depends_on   = [aws_eks_node_group.workers]
+}
+
 resource "aws_eks_addon" "ebs_csi" {
   cluster_name = aws_eks_cluster.main.name
   addon_name   = "aws-ebs-csi-driver"

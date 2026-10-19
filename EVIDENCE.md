@@ -2,6 +2,17 @@
 
 The rubric requires real screenshots and a live or recorded walkthrough. Capture these from your own running GitHub, Docker, AWS and Kubernetes environments. Keep account IDs, tokens and passwords out of screenshots.
 
+## Evidence already captured
+
+- Local application and responsive UI: [desktop](evidence/local-app.png) and [390px mobile](evidence/mobile-app.png).
+- Local quality and containers: [19 passing tests](evidence/pytest-passing.png), [Compose build/start](evidence/compose-build-start.png), and [running services with database](evidence/docker-services-database.png).
+- Source control and CI: [commit history](evidence/commit-history.png), [green Actions run](evidence/ci-success.png), [backend GHCR package](evidence/ghcr-backend.png), and [frontend GHCR package](evidence/ghcr-frontend.png).
+- Image security: [backend clean scan](evidence/trivy-backend-clean.png), [backend summary](evidence/trivy-backend-summary.png), and [frontend summary](evidence/trivy-frontend-summary.png).
+- AWS application and monitoring: [Kubernetes and Helm command output](evidence/eks-status.txt), [live EKS application](evidence/live-eks-app.png), [backend metrics output](evidence/backend-metrics.txt), [Prometheus target UP](evidence/prometheus-targets.png), and [Grafana dashboard](evidence/grafana-dashboard.png).
+- Deliberate failure exercise: [image pull failure and service with no endpoints](evidence/troubleshooting-demo.txt). The demonstration resources were removed.
+
+The AWS and monitoring screenshots above were captured on 17 October 2026. Recheck live resources before a presentation. A refreshed [Terraform plan](evidence/terraform-current-plan.txt) on 19 October showed no changes.
+
 ## Before the cloud demo
 
 1. Repository: https://github.com/Jagrit3500/DevOps_Capstone_Project. Preserve its real commit history. The rubric's target of at least 10 meaningful commits has been met; see the [GitHub history screenshot](evidence/commit-history.png).
@@ -16,35 +27,35 @@ Trivy scanned the operating-system and installed application packages in both ru
 
 ## AWS and Kubernetes demo
 
-1. Install and configure Terraform, AWS CLI, Helm and kubectl. Use your own AWS account in the expected region. In `terraform/`, run `terraform init`, `terraform fmt -check`, `terraform validate`, `terraform plan` and `terraform apply`. Capture the nonempty plan and AWS Console views of the VPC and EKS cluster.
-2. Run the `kubeconfig_command` Terraform output. Terraform installs the EBS CSI add-on for the application's PVC. Install an Ingress controller and Metrics Server. Ensure GHCR packages are public or configure Helm `imagePullSecrets`.
-3. Apply `k8s/namespace.yaml`. Create a `hireflow-db` Secret in the namespace with a `password` key and a fresh password not used for the local demo; do not commit it. Install `helm/hireflow` with `--wait`, your GHCR owner and exact commit SHA. Capture `kubectl get pods -n hireflow`, `kubectl get svc -n hireflow`, `helm list -n hireflow`, `kubectl get hpa -n hireflow`, and the app opened through the Ingress address. Show at least two ready frontend Pods and two ready backend Pods.
-4. Install Prometheus and Grafana with the values in `monitoring/`. Generate some requests using `scripts/load-test.sh`. Capture `/metrics`, the Prometheus Targets page with `hireflow-backend` UP, and the HireFlow Grafana dashboard with a populated request or latency panel.
-5. Demonstrate troubleshooting using the separate `troubleshooting/broken-image.yaml` and `troubleshooting/broken-service.yaml` resources. Explain ImagePullBackOff and the Service with no endpoints. Remove those demo resources after showing them.
+1. Terraform infrastructure was applied in `ap-south-1`; `fmt -check`, `validate`, and a later no-drift `plan` passed. Capture AWS Console views of the VPC and EKS cluster. The original nonempty creation plan is in the terminal history but was not saved as a standalone screenshot.
+2. Run the `kubeconfig_command` Terraform output. Terraform installs the EBS CSI add-on for the application's PVC and Metrics Server for HPA CPU metrics. Ensure GHCR packages are public or configure Helm `imagePullSecrets`.
+3. The `hireflow` namespace and `hireflow-db` Secret already exist; preserve the Secret and never commit its password. The Helm release was deployed with SHA-tagged GHCR images. Recheck `kubectl get pods,svc,pvc,hpa -n hireflow`, `helm list -n hireflow`, and the app through the frontend load balancer. Two frontend and two backend Pods were ready in the last captured output.
+4. Prometheus and Grafana were installed with the values in `monitoring/`. Their backend target and populated dashboard were captured. They use ClusterIP Services; port-forward them again if the demo requires the UIs.
+5. The troubleshooting exercise was captured in `evidence/troubleshooting-demo.txt`; the demo resources were removed. Repeat live only if the presentation requires it.
 6. Demonstrate a real commit reaching the pipeline, publishing images, and updating the EKS deployment. Record the walkthrough if a live presentation is unavailable.
 7. After all deployment evidence is captured, uninstall the application and monitoring Helm releases, then delete remaining PVCs. Run `terraform destroy` and capture its successful completion. Confirm the EKS cluster, EBS volumes, NAT gateway and associated resources are gone.
 
 ## GitHub Actions deployment variables
 
-The optional deploy job runs when `EKS_CLUSTER_NAME` is configured as a GitHub Actions repository variable. Also configure `AWS_REGION` and `AWS_ROLE_ARN`. The AWS role must trust this repository's GitHub OIDC identity on `main` and have EKS access. Create the `hireflow-db` Secret and install the Ingress controller before enabling the deploy job; it checks both. Without these variables, the test, build, scan and publish jobs still run, but the deploy job is skipped.
+The deploy job now has the `AWS_REGION`, `EKS_CLUSTER_NAME`, and `AWS_ROLE_ARN` repository variables. Terraform created a GitHub OIDC role restricted to this repository's `main` branch; `k8s/ci-deploy-rbac.yaml` and `scripts/configure-ci-eks-access.ps1` grant its EKS identity access to deploy HireFlow. The `hireflow-db` Secret already exists and is checked by the workflow. A new successful Actions deployment run must still be captured before this is marked complete.
 
 ## Screenshot checklist from GRADING.md
 
 - [x] Running application in browser at `localhost:3000`
-- [ ] `pytest -v` passing output
+- [x] `pytest -v` passing output — [screenshot](evidence/pytest-passing.png)
 - [x] Commit history with at least 10 genuine commits
-- [ ] `docker compose up --build` showing frontend, backend and PostgreSQL
+- [x] `docker compose up --build` and running frontend, backend and PostgreSQL — [build](evidence/compose-build-start.png), [services/database](evidence/docker-services-database.png)
 - [x] Successful GitHub Actions run URL and screenshot
 - [x] GHCR package pages with SHA tags
-- [ ] Trivy output for both images and 2–3 sentence result explanation
-- [ ] `terraform plan` output
+- [x] Trivy output for both images and result explanation — [backend](evidence/trivy-backend-summary.png), [frontend](evidence/trivy-frontend-summary.png); explanation above
+- [x] Complete no-drift `terraform plan` output — [captured output](evidence/terraform-current-plan.txt). Original creation-plan screenshot remains unavailable.
 - [ ] AWS Console VPC and EKS cluster in the expected region
-- [ ] `kubectl get pods -n hireflow` with Running Pods
-- [ ] `kubectl get svc -n hireflow`
-- [ ] `helm list -n hireflow`
-- [ ] Application through Ingress or LoadBalancer
-- [ ] Backend `/metrics` output
-- [ ] Prometheus Targets page showing HireFlow UP
-- [ ] Grafana dashboard with a populated application metrics panel
+- [x] `kubectl get pods -n hireflow` with Running Pods — [captured output](evidence/eks-status.txt)
+- [x] `kubectl get svc -n hireflow` — [captured output](evidence/eks-status.txt)
+- [x] `helm list -n hireflow` — [captured output](evidence/eks-status.txt)
+- [x] Application through LoadBalancer — [browser screenshot](evidence/live-eks-app.png)
+- [x] Backend `/metrics` output — [captured response](evidence/backend-metrics.txt)
+- [x] Prometheus Targets page showing HireFlow UP — [screenshot](evidence/prometheus-targets.png)
+- [x] Grafana dashboard with a populated application metrics panel — [screenshot](evidence/grafana-dashboard.png)
 - [ ] `terraform destroy` completion
 - [ ] Live presentation or recorded walkthrough

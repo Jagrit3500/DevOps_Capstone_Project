@@ -49,12 +49,16 @@ metadata:
   namespace: {{ .Values.namespace }}
   labels:
     app: frontend
+  {{- with .Values.frontend.service.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
-  type: ClusterIP
+  type: {{ .Values.frontend.service.type }}
   selector:
     app: frontend
   ports:
-    - port: {{ .Values.frontend.port }}
+    - port: {{ .Values.frontend.service.port }}
       targetPort: {{ .Values.frontend.port }}
       protocol: TCP
       name: http
