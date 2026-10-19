@@ -1,7 +1,5 @@
-# CI updates only these image coordinates after both scans pass.
-# Argo CD reconciles this file from main.
 registry: ghcr.io/jagrit3500
 backend:
-  tag: 7faefa4ebb14414bae8171c30c8398b1f0e1ba1d
+  tag: 12b13cad69c1f705ca31743012c399635609c1d7
 frontend:
-  tag: 7faefa4ebb14414bae8171c30c8398b1f0e1ba1d
+  tag: 12b13cad69c1f705ca31743012c399635609c1d7
