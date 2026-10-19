@@ -12,6 +12,9 @@ RUN npm run build
 # Stage 2 — serve with Nginx (minimal runtime image)
 FROM nginx:stable-alpine3.24 AS runtime
 
+# Refresh Alpine packages in the published base image before the vulnerability gate.
+RUN apk upgrade --no-cache
+
 # Remove default nginx config
 RUN rm /etc/nginx/conf.d/default.conf
 
