@@ -1,11 +1,11 @@
 replicaCount: 2
 
-registry: ghcr.io/YOUR_GITHUB_USERNAME
+registry: ghcr.io/jagrit3500
 imagePullSecrets: []
 
 backend:
   image: hireflow-backend
-  tag: latest
+  tag: 7faefa4ebb14414bae8171c30c8398b1f0e1ba1d
   port: 8000
   resources:
     requests:
@@ -17,13 +17,12 @@ backend:
 
 frontend:
   image: hireflow-frontend
-  tag: latest
+  tag: 7faefa4ebb14414bae8171c30c8398b1f0e1ba1d
   port: 8080
   service:
-    type: LoadBalancer
+    type: ClusterIP
     port: 80
-    annotations:
-      service.beta.kubernetes.io/aws-load-balancer-type: nlb
+    annotations: {}
   resources:
     requests:
       cpu: 50m
@@ -42,7 +41,7 @@ postgres:
   storageClassName: hireflow-gp3
 
 ingress:
-  enabled: false
+  enabled: true
   className: nginx
   host: ""
   annotations: {}

@@ -1,0 +1,7 @@
+# AWS NLB exposes this controller; application Services remain ClusterIP.
+controller:
+  replicaCount: 1
+  service:
+    type: LoadBalancer
+    annotations:
+      service.beta.kubernetes.io/aws-load-balancer-type: nlb

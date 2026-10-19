@@ -1,0 +1,11 @@
+# Argo CD is reached through kubectl port-forward during the demo.
+# The application endpoint is exposed separately by ingress-nginx.
+dex:
+  enabled: false
+notifications:
+  enabled: false
+applicationSet:
+  replicas: 0
+server:
+  service:
+    type: ClusterIP

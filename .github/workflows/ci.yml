@@ -1,5 +1,9 @@
 name: HireFlow CI/CD Pipeline
 
+concurrency:
+  group: hireflow-main
+  cancel-in-progress: false
+
 on:
   push:
     branches: [main]
@@ -92,12 +96,12 @@ jobs:
           docker push "${{ steps.images.outputs.frontend }}:${GITHUB_SHA}"
 
   deploy:
-    name: Deploy to EKS
+    name: Promote image tags through GitOps
     runs-on: ubuntu-latest
     needs: images
     if: vars.EKS_CLUSTER_NAME != '' && vars.AWS_ROLE_ARN != '' && vars.AWS_REGION != ''
     permissions:
-      contents: read
+      contents: write
       id-token: write
     steps:
       - uses: actions/checkout@v4
@@ -110,16 +114,31 @@ jobs:
       - name: Verify database secret
         run: |
           kubectl get secret hireflow-db -n hireflow
-      - uses: azure/setup-helm@v4
-      - name: Set lowercase registry
-        id: registry
+      - name: Promote scanned images in Git
         shell: bash
-        run: echo "value=ghcr.io/${GITHUB_REPOSITORY_OWNER,,}" >> "$GITHUB_OUTPUT"
-      - name: Deploy HireFlow
         run: |
-          helm upgrade --install hireflow ./helm/hireflow \
-            --namespace hireflow \
-            --set-string registry="${{ steps.registry.outputs.value }}" \
-            --set-string backend.tag="${GITHUB_SHA}" \
-            --set-string frontend.tag="${GITHUB_SHA}" \
-            --wait --timeout 10m
+          registry="ghcr.io/${GITHUB_REPOSITORY_OWNER,,}"
+          printf 'registry: %s\nbackend:\n  tag: %s\nfrontend:\n  tag: %s\n' \
+            "$registry" "$GITHUB_SHA" "$GITHUB_SHA" > helm/hireflow/values-prod.yaml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add helm/hireflow/values-prod.yaml
+          git commit -m "chore: promote ${GITHUB_SHA::7} [skip ci]"
+          git push origin HEAD:main
+      - name: Wait for Argo CD deployment
+        shell: bash
+        run: |
+          expected="ghcr.io/${GITHUB_REPOSITORY_OWNER,,}"
+          deadline=$((SECONDS + 900))
+          while (( SECONDS < deadline )); do
+            backend="$(kubectl get deployment backend -n hireflow -o jsonpath='{.spec.template.spec.containers[0].image}')"
+            frontend="$(kubectl get deployment frontend -n hireflow -o jsonpath='{.spec.template.spec.containers[0].image}')"
+            if [[ "$backend" == "$expected/hireflow-backend:$GITHUB_SHA" && "$frontend" == "$expected/hireflow-frontend:$GITHUB_SHA" ]]; then
+              kubectl rollout status deployment/backend -n hireflow --timeout=10m
+              kubectl rollout status deployment/frontend -n hireflow --timeout=10m
+              exit 0
+            fi
+            sleep 15
+          done
+          echo 'Timed out waiting for Argo CD to apply the promoted images' >&2
+          exit 1
