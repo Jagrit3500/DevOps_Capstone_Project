@@ -5,10 +5,10 @@ ip-10-0-11-51.ap-south-1.compute.internal    Ready    <none>   38h   v1.35.8-eks
 
 kubectl get pods,svc,pvc,hpa -n hireflow
 NAME                            READY   STATUS    RESTARTS   AGE
-pod/backend-58c8fb6c5d-2jvfw    1/1     Running   0          4m12s
-pod/backend-58c8fb6c5d-8t85l    1/1     Running   0          4m35s
-pod/frontend-5d8d45fc49-2f82s   1/1     Running   0          4m20s
-pod/frontend-5d8d45fc49-ps8f5   1/1     Running   0          4m34s
+pod/backend-6dbc46b9f8-5d6z4    1/1     Running   0          94s
+pod/backend-6dbc46b9f8-j22q5    1/1     Running   0          115s
+pod/frontend-64fbb88b5c-dfzfg   1/1     Running   0          115s
+pod/frontend-64fbb88b5c-vxb25   1/1     Running   0          100s
 pod/postgres-0                  1/1     Running   0          36h
 
 NAME               TYPE           CLUSTER-IP       EXTERNAL-IP                                                                      PORT(S)        AGE
@@ -25,29 +25,29 @@ horizontalpodautoscaler.autoscaling/frontend-hpa   Deployment/frontend   cpu: 2%
 
 kubectl get deployments -n hireflow -o wide
 NAME       READY   UP-TO-DATE   AVAILABLE   AGE   CONTAINERS   IMAGES                                                                          SELECTOR
-backend    2/2     2            2           36h   backend      ghcr.io/jagrit3500/hireflow-backend:99cbefb0f735fb1e49e1c86acf81a87fc8f2f7ac    app=backend
-frontend   2/2     2            2           36h   frontend     ghcr.io/jagrit3500/hireflow-frontend:99cbefb0f735fb1e49e1c86acf81a87fc8f2f7ac   app=frontend
+backend    2/2     2            2           36h   backend      ghcr.io/jagrit3500/hireflow-backend:7faefa4ebb14414bae8171c30c8398b1f0e1ba1d    app=backend
+frontend   2/2     2            2           36h   frontend     ghcr.io/jagrit3500/hireflow-frontend:7faefa4ebb14414bae8171c30c8398b1f0e1ba1d   app=frontend
 
 kubectl get pods,pvc -n monitoring
 NAME                                                 READY   STATUS    RESTARTS   AGE
-pod/grafana-55cdb8d665-ckdfn                         1/1     Running   0          30h
-pod/prometheus-kube-state-metrics-798fb7d7b8-cjqxm   1/1     Running   0          34h
-pod/prometheus-prometheus-node-exporter-nbhg8        1/1     Running   0          34h
-pod/prometheus-prometheus-node-exporter-w4qgc        1/1     Running   0          34h
-pod/prometheus-server-6fd5d9778f-l42nl               2/2     Running   0          34h
+pod/grafana-55cdb8d665-ckdfn                         1/1     Running   0          31h
+pod/prometheus-kube-state-metrics-798fb7d7b8-cjqxm   1/1     Running   0          35h
+pod/prometheus-prometheus-node-exporter-nbhg8        1/1     Running   0          35h
+pod/prometheus-prometheus-node-exporter-w4qgc        1/1     Running   0          35h
+pod/prometheus-server-6fd5d9778f-l42nl               2/2     Running   0          35h
 
 NAME                                      STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   VOLUMEATTRIBUTESCLASS   AGE
 persistentvolumeclaim/grafana             Bound    pvc-3dcacda9-2475-4c8a-a334-47db02d36b8e   5Gi        RWO            hireflow-gp3   <unset>                 34h
-persistentvolumeclaim/prometheus-server   Bound    pvc-6f7ccfa5-cd06-41fd-a493-a3eb4cf6f551   8Gi        RWO            hireflow-gp3   <unset>                 34h
+persistentvolumeclaim/prometheus-server   Bound    pvc-6f7ccfa5-cd06-41fd-a493-a3eb4cf6f551   8Gi        RWO            hireflow-gp3   <unset>                 35h
 
 kubectl top nodes
 NAME                                         CPU(cores)   CPU(%)   MEMORY(bytes)   MEMORY(%)
-ip-10-0-10-171.ap-south-1.compute.internal   55m          2%       1423Mi          45%
-ip-10-0-11-51.ap-south-1.compute.internal    73m          3%       1941Mi          61%
+ip-10-0-10-171.ap-south-1.compute.internal   67m          3%       1453Mi          46%
+ip-10-0-11-51.ap-south-1.compute.internal    72m          3%       1959Mi          62%
 
 helm list -n hireflow
-NAME    	NAMESPACE	REVISION	UPDATED                               	STATUS  	CHART         	APP VERSION
-hireflow	hireflow 	2       	2026-10-19 01:00:40.04893333 +0000 UTC	deployed	hireflow-1.0.0	1.0.0
+NAME    	NAMESPACE	REVISION	UPDATED                                	STATUS  	CHART         	APP VERSION
+hireflow	hireflow 	3       	2026-10-19 01:12:14.930839511 +0000 UTC	deployed	hireflow-1.0.0	1.0.0
 
 helm list -n monitoring
 NAME      	NAMESPACE 	REVISION	UPDATED                              	STATUS  	CHART             	APP VERSION

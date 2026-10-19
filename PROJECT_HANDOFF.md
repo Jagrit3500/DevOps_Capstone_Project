@@ -8,8 +8,8 @@ The user wants the agent to run commands and complete work directly. Request use
 
 HireFlow is a candidate tracking application with a FastAPI backend, React/Vite frontend, PostgreSQL, Docker Compose, GitHub Actions, GHCR images, Terraform, EKS, Helm, Prometheus, and Grafana. The local app, tests, container build, live cloud app, automatic GitHub-to-EKS deployment, monitoring, and a deliberate Kubernetes failure exercise have all been verified. The live EKS cluster is `hireflow-eks` in `ap-south-1`.
 
-- [GitHub Actions run 39182339255, attempt 2](https://github.com/Jagrit3500/DevOps_Capstone_Project/actions/runs/39182339255) succeeded end to end: backend tests, frontend build, backend and frontend image builds, both Trivy HIGH/CRITICAL gates, GHCR publication, and Helm deployment to EKS. [Screenshot](evidence/ci-eks-success.png).
-- Both Kubernetes Deployments were `2/2` ready with image tag `99cbefb0f735fb1e49e1c86acf81a87fc8f2f7ac`; PostgreSQL was `1/1` ready; Helm `hireflow` revision 2 was deployed. The public `/health` returned HTTP 200 and `{"status":"healthy"}`. [Fresh cluster output](evidence/eks-status.txt).
+- [GitHub Actions run 39184093540](https://github.com/Jagrit3500/DevOps_Capstone_Project/actions/runs/39184093540) succeeded end to end: backend tests, frontend build, backend and frontend image builds, both Trivy HIGH/CRITICAL gates, GHCR publication, and Helm deployment to EKS. The [screenshot](evidence/ci-eks-success.png) shows this successful run.
+- Both Kubernetes Deployments were `2/2` ready with image tag `7faefa4ebb14414bae8171c30c8398b1f0e1ba1d`; PostgreSQL was `1/1` ready; Helm `hireflow` revision 3 was deployed. The public `/health` returned HTTP 200 and `{"status":"healthy"}`. [Fresh cluster output](evidence/eks-status.txt).
 - Both private EKS nodes were Ready; HPA CPU metrics and `kubectl top nodes` worked. PostgreSQL, Prometheus, and Grafana PVCs were Bound. Monitoring Pods were healthy, the Prometheus backend target was UP, and Grafana application panels displayed data.
 - `terraform fmt -check`, `terraform validate`, and a full-refresh [plan](evidence/terraform-current-plan.txt) passed. The current plan says **No changes**.
 - The stack remains live and may incur AWS charges. No `terraform destroy` has been run.
@@ -44,10 +44,9 @@ Evidence for local app and tests: [desktop](evidence/local-app.png), [mobile](ev
 
 ## Remaining work and boundaries
 
-1. Finish the final commit/push of the OIDC trust correction, current README/EVIDENCE, current plan and cluster output, this handoff, and the successful CI screenshot. Then verify the new GitHub Actions run and live deployment. Do not stage `debug.log`, `.aws`, `.kube`, `.env`, Terraform state, database or Grafana secrets.
-2. Capture AWS Console screenshots of the VPC and EKS cluster in Mumbai if the grading rubric requires them. The original nonempty creation plan exists in conversation history but has no standalone screenshot; the saved current plan is a real **no-drift** plan.
-3. Present or record the project walkthrough. This requires the user's participation; a coding agent can prepare the commands and evidence but cannot perform their presentation for them.
-4. After the demo and only with the user's explicit teardown decision, uninstall the Helm releases, handle PVCs, run `terraform destroy` against the preserved state, and verify cloud resources are gone. Destruction has not been authorized and would remove the live project.
+1. Capture AWS Console screenshots of the VPC and EKS cluster in Mumbai if the grading rubric requires them. The original nonempty creation plan exists in conversation history but has no standalone screenshot; the saved current plan is a real **no-drift** plan.
+2. Present or record the project walkthrough. This requires the user's participation; a coding agent can prepare the commands and evidence but cannot perform their presentation for them.
+3. After the demo and only with the user's explicit teardown decision, uninstall the Helm releases, handle PVCs, run `terraform destroy` against the preserved state, and verify cloud resources are gone. Destruction has not been authorized and would remove the live project.
 
 Useful starting checks in PowerShell from the repo root:
 
