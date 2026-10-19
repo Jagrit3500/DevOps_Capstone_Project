@@ -75,3 +75,15 @@ variable "github_deploy_branch" {
   type        = string
   default     = "main"
 }
+
+variable "github_owner_id" {
+  description = "Immutable GitHub owner ID included in this repository's OIDC subject"
+  type        = number
+  default     = 180332604
+}
+
+variable "github_repository_id" {
+  description = "Immutable GitHub repository ID included in this repository's OIDC subject"
+  type        = number
+  default     = 1422211801
+}

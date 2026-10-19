@@ -6,7 +6,7 @@ The rubric requires real screenshots and a live or recorded walkthrough. Capture
 
 - Local application and responsive UI: [desktop](evidence/local-app.png) and [390px mobile](evidence/mobile-app.png).
 - Local quality and containers: [19 passing tests](evidence/pytest-passing.png), [Compose build/start](evidence/compose-build-start.png), and [running services with database](evidence/docker-services-database.png).
-- Source control and CI: [commit history](evidence/commit-history.png), [green Actions run](evidence/ci-success.png), [backend GHCR package](evidence/ghcr-backend.png), and [frontend GHCR package](evidence/ghcr-frontend.png).
+- Source control and CI: [commit history](evidence/commit-history.png), [green build run](evidence/ci-success.png), [successful EKS deployment run](evidence/ci-eks-success.png), [backend GHCR package](evidence/ghcr-backend.png), and [frontend GHCR package](evidence/ghcr-frontend.png).
 - Image security: [backend clean scan](evidence/trivy-backend-clean.png), [backend summary](evidence/trivy-backend-summary.png), and [frontend summary](evidence/trivy-frontend-summary.png).
 - AWS application and monitoring: [Kubernetes and Helm command output](evidence/eks-status.txt), [live EKS application](evidence/live-eks-app.png), [backend metrics output](evidence/backend-metrics.txt), [Prometheus target UP](evidence/prometheus-targets.png), and [Grafana dashboard](evidence/grafana-dashboard.png).
 - Deliberate failure exercise: [image pull failure and service with no endpoints](evidence/troubleshooting-demo.txt). The demonstration resources were removed.
@@ -21,7 +21,7 @@ The AWS and monitoring screenshots above were captured on 17 October 2026. Reche
 4. Push to `main`. Capture the successful GitHub Actions run URL, its Trivy scan output for both images, the GHCR package pages showing SHA tags, and the commit history.
 5. Add a 2–3 sentence explanation of what Trivy scanned and what the result means. Use the actual scan result.
 
-Verified CI result: [run 38922674760](https://github.com/Jagrit3500/DevOps_Capstone_Project/actions/runs/38922674760) passed backend tests, frontend build, both image builds, both Trivy gates and GHCR publication. The [run screenshot](evidence/ci-success.png) shows those jobs green. The EKS deploy job was skipped because the AWS repository variables are not configured yet. The [backend](evidence/ghcr-backend.png) and [frontend](evidence/ghcr-frontend.png) GHCR screenshots show the SHA-tagged images are public. A [390px mobile screenshot](evidence/mobile-app.png) was captured with `node scripts/capture-mobile.mjs`; its viewport and document width both measured 390px.
+Verified CI/CD result: [run 39182339255 (attempt 2)](https://github.com/Jagrit3500/DevOps_Capstone_Project/actions/runs/39182339255) passed backend tests, frontend build, both image builds, both Trivy gates, GHCR publication, and the EKS deploy job. The [run screenshot](evidence/ci-eks-success.png) shows all four jobs green. GitHub Actions deployed image tag `99cbefb0f735fb1e49e1c86acf81a87fc8f2f7ac`; Helm revision 2, two ready backend Pods, two ready frontend Pods, and HTTP 200 from the public `/health` endpoint were independently verified. The [backend](evidence/ghcr-backend.png) and [frontend](evidence/ghcr-frontend.png) GHCR screenshots show public SHA-tagged images. A [390px mobile screenshot](evidence/mobile-app.png) was captured with `node scripts/capture-mobile.mjs`; its viewport and document width both measured 390px.
 
 Trivy scanned the operating-system and installed application packages in both runtime images for HIGH and CRITICAL vulnerabilities. Both refreshed images passed the strict gate; the local scan reported zero such findings in each image, and the GitHub Actions scans also passed. Future scans can change as the vulnerability database and image tags are updated.
 
@@ -37,7 +37,7 @@ Trivy scanned the operating-system and installed application packages in both ru
 
 ## GitHub Actions deployment variables
 
-The deploy job now has the `AWS_REGION`, `EKS_CLUSTER_NAME`, and `AWS_ROLE_ARN` repository variables. Terraform created a GitHub OIDC role restricted to this repository's `main` branch; `k8s/ci-deploy-rbac.yaml` and `scripts/configure-ci-eks-access.ps1` grant its EKS identity access to deploy HireFlow. The `hireflow-db` Secret already exists and is checked by the workflow. A new successful Actions deployment run must still be captured before this is marked complete.
+The deploy job has the `AWS_REGION`, `EKS_CLUSTER_NAME`, and `AWS_ROLE_ARN` repository variables. Terraform created a GitHub OIDC role restricted to this repository's `main` branch using its immutable OIDC subject; `k8s/ci-deploy-rbac.yaml` and `scripts/configure-ci-eks-access.ps1` grant its EKS identity access to deploy HireFlow. The `hireflow-db` Secret already exists and is checked by the workflow. The successful Actions deployment is recorded above.
 
 ## Screenshot checklist from GRADING.md
 

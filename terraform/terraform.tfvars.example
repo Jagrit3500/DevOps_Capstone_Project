@@ -14,3 +14,5 @@ node_group_max_size     = 4
 node_group_desired_size = 2
 github_repository       = "Jagrit3500/DevOps_Capstone_Project"
 github_deploy_branch    = "main"
+github_owner_id         = 180332604
+github_repository_id    = 1422211801
