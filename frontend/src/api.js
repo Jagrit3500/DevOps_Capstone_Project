@@ -11,9 +11,17 @@ export async function fetchCandidates(params = {}) {
   if (params.status)     q.set('status', params.status)
   if (params.priority)   q.set('priority', params.priority)
   if (params.department) q.set('department', params.department)
-  const res = await fetch(`${BASE}/?${q}`)
-  if (!res.ok) throw new Error('Failed to fetch candidates')
-  return res.json()
+  const candidates = []
+  const pageSize = 100
+  q.set('limit', String(pageSize))
+  for (let skip = 0; ; skip += pageSize) {
+    q.set('skip', String(skip))
+    const res = await fetch(`${BASE}/?${q}`)
+    if (!res.ok) throw new Error('Failed to fetch candidates')
+    const page = await res.json()
+    candidates.push(...page)
+    if (page.length < pageSize) return candidates
+  }
 }
 
 export async function createCandidate(payload) {

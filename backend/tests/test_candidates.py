@@ -156,3 +156,28 @@ def test_get_pipeline_stats(client):
 def test_update_nonexistent_candidate(client):
     resp = client.put("/api/candidates/999999", json={"status": "hired"})
     assert resp.status_code == 404
+
+
+def test_create_rejects_resume_url_exceeding_database_limit(client):
+    resp = client.post(
+        "/api/candidates/",
+        json=_sample_payload(resume_url="https://example.com/" + "x" * 500),
+    )
+    assert resp.status_code == 422
+
+
+def test_update_rejects_resume_url_exceeding_database_limit(client):
+    created = client.post("/api/candidates/", json=_sample_payload())
+    resp = client.put(
+        f"/api/candidates/{created.json()['id']}",
+        json={"resume_url": "https://example.com/" + "x" * 500},
+    )
+    assert resp.status_code == 422
+    assert client.get(f"/api/candidates/{created.json()['id']}").json()["resume_url"] is None
+
+
+def test_metrics_returns_prometheus_output(client):
+    client.get("/health")
+    resp = client.get("/metrics")
+    assert resp.status_code == 200
+    assert "http_requests_total" in resp.text

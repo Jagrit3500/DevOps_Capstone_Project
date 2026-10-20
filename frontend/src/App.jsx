@@ -55,7 +55,10 @@ function Toast({ message, type, onClose }) {
 
 // ─── Candidate Form Modal ─────────────────────────────────────────────────────
 function CandidateModal({ initial, onClose, onSave }) {
-  const [form, setForm] = useState(initial || EMPTY_FORM)
+  const [form, setForm] = useState({
+    ...EMPTY_FORM, ...initial,
+    notes: initial?.notes ?? '', resume_url: initial?.resume_url ?? '',
+  })
   const [errors, setErrors] = useState({})
   const [saving, setSaving] = useState(false)
 
@@ -152,10 +155,16 @@ function CandidateModal({ initial, onClose, onSave }) {
 // ─── Confirm Delete Modal ─────────────────────────────────────────────────────
 function ConfirmModal({ candidate, onConfirm, onClose }) {
   const [deleting, setDeleting] = useState(false)
+  const [error, setError] = useState(null)
   const handle = async () => {
     setDeleting(true)
-    await onConfirm()
-    onClose()
+    try {
+      await onConfirm()
+      onClose()
+    } catch (err) {
+      setError(err.message)
+      setDeleting(false)
+    }
   }
   return (
     <div className="modal-overlay" onClick={e => e.target === e.currentTarget && onClose()}>
@@ -169,6 +178,7 @@ function ConfirmModal({ candidate, onConfirm, onClose }) {
             Are you sure you want to remove <span className="confirm-name">{candidate.name}</span> from the pipeline?
             This action cannot be undone.
           </p>
+          {error && <div className="error-banner">{error}</div>}
         </div>
         <div className="modal-footer">
           <button className="btn btn-secondary" onClick={onClose}>Cancel</button>
@@ -207,9 +217,8 @@ function StatsGrid({ stats }) {
 // ─── Pipeline Bar ─────────────────────────────────────────────────────────────
 function PipelineBar({ stats }) {
   const active = STATUSES.filter(s => s !== 'rejected')
-  const activeTotal = active.reduce((s, k) => s + (stats[k] || 0), 0) || 1
   return (
-    <div className="pipeline-card">
+    <div className="pipeline-card" id="pipeline-flow">
       <div className="pipeline-title">Pipeline Flow</div>
       <div className="pipeline-bar">
         {active.map(s => (
@@ -249,7 +258,7 @@ function CandidateTable({ candidates, onEdit, onDelete }) {
   }
 
   return (
-    <div className="table-wrap">
+    <div className="table-wrap" id="candidate-list">
       <table>
         <thead>
           <tr>
@@ -369,31 +378,17 @@ export default function App() {
         </div>
         <nav className="sidebar-nav">
           <div className="nav-section-title">Workspace</div>
-          <button className="nav-item active">
+          <button className="nav-item active" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
             <span className="nav-icon">📊</span>
             <span>Pipeline</span>
           </button>
-          <button className="nav-item">
+          <button className="nav-item" onClick={() => document.querySelector('.toolbar')?.scrollIntoView({ behavior: 'smooth' })}>
             <span className="nav-icon">👥</span>
             <span>Candidates</span>
           </button>
-          <button className="nav-item">
-            <span className="nav-icon">🏢</span>
-            <span>Departments</span>
-          </button>
-          <div className="nav-section-title" style={{ marginTop: 12 }}>Reports</div>
-          <button className="nav-item">
+          <button className="nav-item" onClick={() => document.getElementById('pipeline-flow')?.scrollIntoView({ behavior: 'smooth' })}>
             <span className="nav-icon">📈</span>
-            <span>Analytics</span>
-          </button>
-          <button className="nav-item">
-            <span className="nav-icon">📅</span>
-            <span>Calendar</span>
-          </button>
-          <div className="nav-section-title" style={{ marginTop: 12 }}>Settings</div>
-          <button className="nav-item">
-            <span className="nav-icon">⚙️</span>
-            <span>Settings</span>
+            <span>Pipeline Flow</span>
           </button>
         </nav>
         <div className="sidebar-footer">

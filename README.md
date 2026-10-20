@@ -1,6 +1,6 @@
 # ⚡ HireFlow — Recruitment Pipeline Tracker
 
-> A DevOps Final Capstone Project (Session 21)  
+> A DevOps Final Capstone Project (Session 21)
 > Domain: **Recruitment / HR Tech SaaS**
 
 HireFlow is a full-stack recruitment pipeline capstone demo that lets hiring teams manage candidates through every stage: **Applied → Screening → Interview → Offer → Hired / Rejected**.
@@ -9,35 +9,25 @@ HireFlow is a full-stack recruitment pipeline capstone demo that lets hiring tea
 
 ## 🏗️ Architecture
 
-```
-Developer
-   |
-   v
-Git / GitHub
-   |
-   v
-GitHub Actions CI/CD
-   |-- pytest (quality gate)
-   |-- npm run build (frontend)
-   |-- Docker build (backend + frontend)
-   |-- Trivy security scan (HIGH/CRITICAL CVEs fail the build)
-   `-- Push images to GHCR with SHA tags
-              |
-              v
-        Terraform (AWS)
-              |
-       VPC + EKS Cluster
-              |
-              v
-            Helm
-              |
-    +---------+---------+
-    |                   |
- Frontend            Backend
-  React + Vite        FastAPI
-  Nginx               PostgreSQL
-    |                   |
-    +-------> Prometheus + Grafana
+```text
+Developer -> GitHub main -> GitHub Actions
+                            |-- pytest + frontend tests/build
+                            |-- Build both Docker images
+                            |-- Trivy HIGH/CRITICAL gates
+                            |-- Publish SHA tags to GHCR
+                            `-- Commit image tags to production Helm values
+                                             |
+                                          Argo CD
+                                             |
+Terraform -> AWS VPC + EKS <--- Helm manifests from Git
+                       |
+Public load balancer -> ingress-nginx
+                         |-- /    -> frontend ClusterIP -> React/Nginx
+                         `-- /api -> backend ClusterIP -> FastAPI -> PostgreSQL/PVC
+                                                          |
+                                                    /metrics
+                                                          |
+                                                    Prometheus -> Grafana
 ```
 
 ---
@@ -148,7 +138,7 @@ pytest -v
 
 Tests use an isolated **SQLite test database** — no PostgreSQL required in CI.
 
-The suite currently has 19 passing cases covering health, CRUD, filtering,
+The suite currently has 22 passing cases covering health, CRUD, filtering,
 statistics, duplicate emails, invalid updates and demo-seed configuration.
 
 ---
@@ -166,7 +156,7 @@ docker build -t hireflow-frontend ./frontend
 docker compose up --build
 ```
 
-Both images run as **non-root users**.  
+Both images run as **non-root users**.
 Frontend uses a **multi-stage build** (Node 20 → Nginx).
 
 ---
@@ -175,11 +165,13 @@ Frontend uses a **multi-stage build** (Node 20 → Nginx).
 
 Pipeline runs on every push to `main`:
 
-1. **Pytest** — fails the build if any test fails  
-2. **npm run build** — builds the React frontend  
-3. **Docker build** - builds both images tagged with the Git commit SHA  
-4. **Trivy** - scans both images and stops publication on HIGH or CRITICAL CVEs  
-5. **GHCR push** - publishes the scanned SHA-tagged images  
+1. **Pytest** — fails the build if any test fails
+2. **npm run build** — builds the React frontend
+   The frontend job also runs `npm audit --audit-level=high` and pagination regression tests.
+3. **Frontend tests** - verifies API pagination and error handling
+4. **Docker build** - builds both images tagged with the Git commit SHA
+5. **Trivy** - scans both images and stops publication on HIGH or CRITICAL CVEs
+6. **GHCR push** - publishes the scanned SHA-tagged images
 
 Images are published to **GitHub Container Registry (GHCR)**:
 ```
@@ -187,7 +179,7 @@ ghcr.io/<owner>/hireflow-backend:<sha>
 ghcr.io/<owner>/hireflow-frontend:<sha>
 ```
 
-The deploy job uses GitHub OIDC to assume a repository-and-`main`-branch-scoped AWS role; it stores no long-lived AWS key. Terraform creates the OIDC provider and role. This repository uses GitHub's immutable OIDC subject, so the trust policy includes its owner and repository IDs. The role can only describe this EKS cluster through IAM. EKS `aws-auth` maps it to the `hireflow:ci-deploy` group, and [CI RBAC](k8s/ci-deploy-rbac.yaml) grants namespace administration plus the StorageClass permissions needed by this Helm chart. Run `scripts/configure-ci-eks-access.ps1` with the Terraform `github_actions_role_arn` output after applying the RBAC manifest. The `hireflow` namespace and `hireflow-db` Secret must exist before enabling the deploy job. Repository Actions variables are `AWS_REGION`, `EKS_CLUSTER_NAME`, and `AWS_ROLE_ARN`.
+The deploy job uses GitHub OIDC to assume a repository-and-`main`-branch-scoped AWS role; it stores no long-lived AWS key. Terraform creates the OIDC provider and role. This repository uses GitHub's immutable OIDC subject, so the trust policy includes its owner and repository IDs. The role can only describe this EKS cluster through IAM. EKS `aws-auth` maps it to the `hireflow:ci-deploy` group. After both scans pass, CI commits the exact image SHA to [production Helm values](helm/hireflow/values-prod.yaml), then waits for Argo CD to deploy that version. The bot commit includes `[skip ci]` to prevent a second build. [Argo CD's Application](argocd/hireflow-application.yaml) follows `main` and applies the Helm chart. The `hireflow` namespace and `hireflow-db` Secret must exist before enabling the deploy job. Repository Actions variables are `AWS_REGION`, `EKS_CLUSTER_NAME`, and `AWS_ROLE_ARN`.
 
 ---
 
@@ -229,22 +221,30 @@ terraform destroy
 kubectl apply -f k8s/namespace.yaml
 
 # Terraform installs the EBS CSI driver for persistent volumes and Metrics Server for the HPA.
-# The frontend Service creates a public AWS load balancer; its Nginx proxies API requests to the backend.
+# Install ingress-nginx first. Ingress routes / to frontend and /api to backend.
 # Create a hireflow-db Secret in this namespace with a password key.
 # Make the GHCR packages public, or configure imagePullSecrets in Helm values.
 # Each backend Pod runs Alembic migrations before starting.
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+helm repo add argo https://argoproj.github.io/argo-helm
+helm repo update
+helm upgrade --install ingress-nginx ingress-nginx/ingress-nginx \
+  --version 4.15.1 --namespace ingress-nginx --create-namespace \
+  -f k8s/ingress-nginx-values.yaml --wait
+
+# Bootstrap the chart once, then let Argo CD own subsequent image changes.
 helm upgrade --install hireflow ./helm/hireflow \
-  --namespace hireflow \
-  --set registry=ghcr.io/jagrit3500 \
-  --set backend.tag=<sha> \
-  --set frontend.tag=<sha> \
-  --wait
+  --namespace hireflow -f helm/hireflow/values-prod.yaml --wait
+helm upgrade --install argocd argo/argo-cd --version 10.10.5 \
+  --namespace argocd --create-namespace -f argocd/values.yaml --wait
+kubectl apply -f argocd/hireflow-application.yaml
 
 # Verify
 kubectl get pods -n hireflow
 kubectl get svc -n hireflow
-helm list -n hireflow
-# Open http://<frontend EXTERNAL-IP/DNS> after the load balancer is ready.
+kubectl get ingress -n hireflow
+kubectl get application hireflow -n argocd
+# Open http://<ingress-nginx-controller EXTERNAL-IP/DNS> after the load balancer is ready.
 ```
 
 ---
@@ -301,7 +301,7 @@ Full docs: **http://localhost:8000/docs**
 - Docker images run as **non-root** users
 - **Trivy** scans every image build — HIGH/CRITICAL CVEs fail the pipeline
 - Compose reads the local password from ignored `.env`; Helm reads it from an existing Kubernetes Secret
-- Sample candidates are seeded only when `SEED_DEMO_DATA=true` (set by local Compose); cloud deployments start empty
+- Fictional candidates are seeded only when `SEED_DEMO_DATA=true`; seeding defaults to false in Compose and cloud deployments
 - This classroom API has no user authentication; use sample data only until access control is added
 - `.gitignore` excludes `.env`, `__pycache__`, `node_modules`, `.venv`, `terraform.tfvars`
 - AWS credentials must **never** be committed to Git
@@ -313,12 +313,28 @@ Full docs: **http://localhost:8000/docs**
 | Module | Status |
 |--------|--------|
 | M1 - Application | Compose stack, PostgreSQL, API and frontend HTTP verified locally; [browser screenshot](evidence/local-app.png) and [mobile screenshot](evidence/mobile-app.png) captured |
-| M2 - Testing | 19 pytest cases passed locally; [test screenshot](evidence/pytest-passing.png) captured |
-| M3 - Git | Repository pushed to GitHub with 10 meaningful commits; [history screenshot](evidence/commit-history.png) captured |
+| M2 - Testing | 22 pytest cases passed locally; [test screenshot](evidence/pytest-passing.png) captured |
+| M3 - Git | Public repository with more than 10 meaningful commits; [history screenshot](evidence/commit-history.png) captured |
 | M4 - Docker | Both images built and all three Compose services started locally; [build screenshot](evidence/compose-build-start.png) and [services/database screenshot](evidence/docker-services-database.png) captured |
-| M5 - CI/CD | Tests, frontend build, image builds, Trivy gates, GHCR publication, and automatic EKS deployment passed on the final source commit in [run 39184093540](https://github.com/Jagrit3500/DevOps_Capstone_Project/actions/runs/39184093540); [deployment screenshot](evidence/ci-eks-success.png), [backend package](evidence/ghcr-backend.png), and [frontend package](evidence/ghcr-frontend.png) captured. |
+| M5 - CI/CD | Tests, frontend build, image builds, Trivy gates, GHCR publication, and GitOps promotion passed in [run 39343899906](https://github.com/Jagrit3500/DevOps_Capstone_Project/actions/runs/39343899906). |
 | M6 - DevSecOps | Both image Trivy HIGH/CRITICAL gates passed in the deployment run; [backend](evidence/trivy-backend-summary.png) and [frontend](evidence/trivy-frontend-summary.png) scan screenshots captured. The frontend runtime updates Alpine packages during its build. |
 | M7 - Terraform | VPC, EKS, EBS CSI, and Metrics Server applied in `ap-south-1`; fmt, validate, and [a captured no-drift plan](evidence/terraform-current-plan.txt) passed. AWS Console screenshots and teardown proof remain. |
-| M8 — Kubernetes + Helm | `hireflow` Helm release revision 3 deployed on EKS from CI; two backend and two frontend Pods ready, PostgreSQL running, HPA metrics present. [Cluster output](evidence/eks-status.txt) and [live app screenshot](evidence/live-eks-app.png) captured. |
+| M8 — Kubernetes + Helm | Two backend and two frontend Pods ready, PostgreSQL running, HPA metrics present, frontend/backend Services are ClusterIP, and Ingress routes `/` and `/api` through ingress-nginx. Argo CD reports Synced and Healthy. |
 | M9 — Observability | Prometheus target UP and Grafana application panels populated; [metrics](evidence/backend-metrics.txt), [Prometheus](evidence/prometheus-targets.png), and [Grafana](evidence/grafana-dashboard.png) evidence captured. |
-| M10 — Documentation | README present; live or recorded demonstration pending |
+| M10 — Documentation | README and audit present; see `demo/` for presentation artifacts and remaining submission steps. |
+
+
+## Configuration and limitations
+
+Database credentials come from ignored environment configuration locally and the existing `hireflow-db` Kubernetes Secret in EKS. AWS access uses short-lived local profiles and GitHub OIDC. Terraform variables configure region, names, CIDRs, worker capacity, and repository trust. Helm values configure images, replicas, resources, storage, and ingress. Browser requests use relative `/api` URLs; candidate counts and records come from PostgreSQL through the API. Fixed API routes, service DNS names, ports, enum values, branding, and optional fictional seed fixtures are application contracts/defaults, not credentials or fabricated live data.
+
+This capstone exposes a public HTTP API without authentication or TLS. Use fictional records. Database backups, production access control, TLS, and high-availability PostgreSQL are outside the grading requirements. The UI implements the candidate pipeline; calendar and account settings are not implemented or advertised. AWS regional and Docker registry DNS has intermittently failed on this workstation; retry connectivity before changing infrastructure.
+
+The full requirement audit is in [AUDIT.md](AUDIT.md), with [evidence](EVIDENCE.md), a [slide deck](demo/HireFlow_Presentation.pdf), and the [recording guide](demo/VIDEO_SCRIPT.md). A genuine video, AWS Console screenshots, original creation-plan screenshot, and post-evaluation teardown proof remain required. Do not describe the submission as complete until these items and the course form are handled.
+
+Verify either the local or public deployment without leaving a test record:
+
+```powershell
+./scripts/verify-app.ps1 -BaseUrl http://localhost:3000
+# Or pass the current ingress-nginx-controller load balancer URL.
+```

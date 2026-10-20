@@ -1,61 +1,48 @@
-# Session 21 submission evidence
+# HireFlow submission evidence
 
-The rubric requires real screenshots and a live or recorded walkthrough. Capture these from your own running GitHub, Docker, AWS and Kubernetes environments. Keep account IDs, tokens and passwords out of screenshots.
+Verified against the instructor's [grading rubric](https://github.com/Nency-Ravaliya/devsecops-python/blob/main/GRADING.md) on 20 October 2026. See [AUDIT.md](AUDIT.md) for the requirement matrix and limitations.
 
-## Evidence already captured
+## Application, tests, and containers
 
-- Local application and responsive UI: [desktop](evidence/local-app.png) and [390px mobile](evidence/mobile-app.png).
-- Local quality and containers: [19 passing tests](evidence/pytest-passing.png), [Compose build/start](evidence/compose-build-start.png), and [running services with database](evidence/docker-services-database.png).
-- Source control and CI: [commit history](evidence/commit-history.png), [green build run](evidence/ci-success.png), [successful EKS deployment run](evidence/ci-eks-success.png), [backend GHCR package](evidence/ghcr-backend.png), and [frontend GHCR package](evidence/ghcr-frontend.png).
-- Image security: [backend clean scan](evidence/trivy-backend-clean.png), [backend summary](evidence/trivy-backend-summary.png), and [frontend summary](evidence/trivy-frontend-summary.png).
-- AWS application and monitoring: [Kubernetes and Helm command output](evidence/eks-status.txt), [live EKS application](evidence/live-eks-app.png), [backend metrics output](evidence/backend-metrics.txt), [Prometheus target UP](evidence/prometheus-targets.png), and [Grafana dashboard](evidence/grafana-dashboard.png).
-- Deliberate failure exercise: [image pull failure and service with no endpoints](evidence/troubleshooting-demo.txt). The demonstration resources were removed.
+- [Local desktop](evidence/local-app.png), [mobile](evidence/mobile-app.png), and [current public Ingress](evidence/live-ingress-app.png).
+- [Earlier 19-case pytest screenshot](evidence/pytest-passing.png).
+- [Docker Compose build/start](evidence/compose-build-start.png) and [three running services plus database](evidence/docker-services-database.png).
+- Live public Ingress CRUD smoke test passed create, read, update, statistics, and delete. The synthetic record was removed; `/api/candidates/` returned `[]` afterward.
 
-The AWS and monitoring screenshots above were captured on 17 October 2026. Recheck live resources before a presentation. A refreshed [Terraform plan](evidence/terraform-current-plan.txt) on 19 October showed no changes.
+## Git, CI/CD, and security
 
-## Before the cloud demo
+- [Commit history](evidence/commit-history.png).
+- [Successful GitOps workflow screenshot](evidence/ci-gitops-success.png) and [run 39343899906](https://github.com/Jagrit3500/DevOps_Capstone_Project/actions/runs/39343899906). Its tests, frontend build, image builds, both Trivy scans, GHCR publication, and image promotion jobs passed.
+- [GHCR backend](evidence/ghcr-backend.png) and [GHCR frontend](evidence/ghcr-frontend.png) package screenshots.
+- [Backend Trivy result](evidence/trivy-backend-summary.png) and [frontend Trivy result](evidence/trivy-frontend-summary.png). Trivy checked operating system and installed application packages in both runtime images for HIGH and CRITICAL vulnerabilities; the strict gate passed. Vulnerability results can change when its database or the images change.
 
-1. Repository: https://github.com/Jagrit3500/DevOps_Capstone_Project. Preserve its real commit history. The rubric's target of at least 10 meaningful commits has been met; see the [GitHub history screenshot](evidence/commit-history.png).
-2. Start Docker Desktop. Copy `.env.example` to `.env` and set a local password (the current local `.env` is already set up and ignored by Git). Run `docker compose up --build`, then capture the terminal showing all three services and the browser at `http://localhost:3000` with a candidate added.
-3. Run `cd backend` and `python -m pytest -v`; capture the passing test output. Open `/docs` and demonstrate create, read, update and delete. Show the PostgreSQL `candidates` table.
-4. Push to `main`. Capture the successful GitHub Actions run URL, its Trivy scan output for both images, the GHCR package pages showing SHA tags, and the commit history.
-5. Add a 2–3 sentence explanation of what Trivy scanned and what the result means. Use the actual scan result.
+## AWS, Kubernetes, GitOps, and monitoring
 
-Verified CI/CD result: [run 39184093540](https://github.com/Jagrit3500/DevOps_Capstone_Project/actions/runs/39184093540) passed backend tests, frontend build, both image builds, both Trivy gates, GHCR publication, and the EKS deploy job. The [run screenshot](evidence/ci-eks-success.png) shows all four jobs green. The final source run deployed image tag `7faefa4ebb14414bae8171c30c8398b1f0e1ba1d`; Helm revision 3, two ready backend Pods, two ready frontend Pods, and HTTP 200 from the public `/health` endpoint were independently verified. The [backend](evidence/ghcr-backend.png) and [frontend](evidence/ghcr-frontend.png) GHCR screenshots show public SHA-tagged images. A [390px mobile screenshot](evidence/mobile-app.png) was captured with `node scripts/capture-mobile.mjs`; its viewport and document width both measured 390px.
+- [Live Kubernetes and Argo CD status](evidence/live-gitops-status.txt): Argo CD `Synced` and `Healthy`, two ready backend replicas, two ready frontend replicas, PostgreSQL ready, ClusterIP Services, Ingress, HPA metrics, and two Ready nodes.
+- [Public application through Ingress](evidence/live-ingress-app.png). HTTP checks returned 200 from `/`, healthy JSON from `/health`, and `[]` from `/api/candidates/`.
+- [Terraform no-drift plan](evidence/terraform-current-plan.txt). The infrastructure was already provisioned when this plan was captured. Do not present it as the original nonempty creation plan.
+- [Backend Prometheus metrics](evidence/backend-metrics.txt), [Prometheus target UP](evidence/prometheus-targets.png), and [Grafana live dashboard](evidence/grafana-dashboard.png). A fresh Prometheus query on 20 October returned `up=1` for `hireflow-backend`.
+- [Troubleshooting exercise](evidence/troubleshooting-demo.txt): deliberate bad image and Service selector, with temporary resources removed.
 
-Trivy scanned the operating-system and installed application packages in both runtime images for HIGH and CRITICAL vulnerabilities. Both refreshed images passed the strict gate; the local scan reported zero such findings in each image, and the GitHub Actions scans also passed. Future scans can change as the vulnerability database and image tags are updated.
+## Presentation
 
-## AWS and Kubernetes demo
+- [Ten-page PDF slide deck](demo/HireFlow_Presentation.pdf) covers overview, stack, architecture, CI/CD, infrastructure, Kubernetes, observability, and lessons.
+- [Recording guide](demo/VIDEO_SCRIPT.md) gives the required sequence, commands, and screens. A real MP4 walkthrough has **not** been recorded. The [submission instructions](https://github.com/Nency-Ravaliya/devsecops-python/blob/main/SUBMISSION.md) say the MP4 is mandatory and must show live tools.
 
-1. Terraform infrastructure was applied in `ap-south-1`; `fmt -check`, `validate`, and a later no-drift `plan` passed. Capture AWS Console views of the VPC and EKS cluster. The original nonempty creation plan is in the terminal history but was not saved as a standalone screenshot.
-2. Run the `kubeconfig_command` Terraform output. Terraform installs the EBS CSI add-on for the application's PVC and Metrics Server for HPA CPU metrics. Ensure GHCR packages are public or configure Helm `imagePullSecrets`.
-3. The `hireflow` namespace and `hireflow-db` Secret already exist; preserve the Secret and never commit its password. The Helm release was deployed with SHA-tagged GHCR images. Recheck `kubectl get pods,svc,pvc,hpa -n hireflow`, `helm list -n hireflow`, and the app through the frontend load balancer. Two frontend and two backend Pods were ready in the last captured output.
-4. Prometheus and Grafana were installed with the values in `monitoring/`. Their backend target and populated dashboard were captured. They use ClusterIP Services; port-forward them again if the demo requires the UIs.
-5. The troubleshooting exercise was captured in `evidence/troubleshooting-demo.txt`; the demo resources were removed. Repeat live only if the presentation requires it.
-6. Demonstrate a real commit reaching the pipeline, publishing images, and updating the EKS deployment. Record the walkthrough if a live presentation is unavailable.
-7. After all deployment evidence is captured, uninstall the application and monitoring Helm releases, then delete remaining PVCs. Run `terraform destroy` and capture its successful completion. Confirm the EKS cluster, EBS volumes, NAT gateway and associated resources are gone.
+## Evidence still to capture
 
-## GitHub Actions deployment variables
+1. Original nonempty Terraform creation plan screenshot, if available from the provisioning session.
+2. AWS Console screenshots showing the HireFlow VPC and EKS cluster in `ap-south-1`. No AWS Console browser session was accessible to this agent.
+3. Genuine walkthrough MP4 following `demo/VIDEO_SCRIPT.md`.
+4. Successful `terraform destroy` screenshot **after** the evaluation; the live stack is being preserved for the walkthrough and currently incurs AWS charges.
 
-The deploy job has the `AWS_REGION`, `EKS_CLUSTER_NAME`, and `AWS_ROLE_ARN` repository variables. Terraform created a GitHub OIDC role restricted to this repository's `main` branch using its immutable OIDC subject; `k8s/ci-deploy-rbac.yaml` and `scripts/configure-ci-eks-access.ps1` grant its EKS identity access to deploy HireFlow. The `hireflow-db` Secret already exists and is checked by the workflow. The successful Actions deployment is recorded above.
+Keep credentials, database passwords, and Grafana admin passwords out of screenshots and video.
 
-## Screenshot checklist from GRADING.md
 
-- [x] Running application in browser at `localhost:3000`
-- [x] `pytest -v` passing output — [screenshot](evidence/pytest-passing.png)
-- [x] Commit history with at least 10 genuine commits
-- [x] `docker compose up --build` and running frontend, backend and PostgreSQL — [build](evidence/compose-build-start.png), [services/database](evidence/docker-services-database.png)
-- [x] Successful GitHub Actions run URL and screenshot
-- [x] GHCR package pages with SHA tags
-- [x] Trivy output for both images and result explanation — [backend](evidence/trivy-backend-summary.png), [frontend](evidence/trivy-frontend-summary.png); explanation above
-- [x] Complete no-drift `terraform plan` output — [captured output](evidence/terraform-current-plan.txt). Original creation-plan screenshot remains unavailable.
-- [ ] AWS Console VPC and EKS cluster in the expected region
-- [x] `kubectl get pods -n hireflow` with Running Pods — [captured output](evidence/eks-status.txt)
-- [x] `kubectl get svc -n hireflow` — [captured output](evidence/eks-status.txt)
-- [x] `helm list -n hireflow` — [captured output](evidence/eks-status.txt)
-- [x] Application through LoadBalancer — [browser screenshot](evidence/live-eks-app.png)
-- [x] Backend `/metrics` output — [captured response](evidence/backend-metrics.txt)
-- [x] Prometheus Targets page showing HireFlow UP — [screenshot](evidence/prometheus-targets.png)
-- [x] Grafana dashboard with a populated application metrics panel — [screenshot](evidence/grafana-dashboard.png)
-- [ ] `terraform destroy` completion
-- [ ] Live presentation or recorded walkthrough
+## Final audit checks (20 October 2026)
+
+- [Instructor repository file inventory](evidence/reference-review.txt) records every tracked file and reviewed source revision.
+- [Current automated validation](evidence/audit-validation.txt) contains the 22-case backend result and two frontend API test results. The earlier pytest screenshot shows the 19-case suite before the audit fixes.
+- [Current Terraform plan](evidence/terraform-current-plan.txt) is a full-refresh, no-drift plan, not the original creation plan.
+- [Current live verification](evidence/final-live-verification.txt) records public API smoke checks, resource readiness, Argo CD, Prometheus, Grafana, and Helm releases.
+- [Secret scan summary](evidence/secret-scan-summary.txt) records the redacted Gitleaks result. Scanner findings containing possible secrets are excluded from Git.

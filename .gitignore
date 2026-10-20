@@ -16,6 +16,7 @@ build/
 *.env
 
 # Test artifacts
+.codex-build/
 .pytest_cache/
 .coverage
 htmlcov/

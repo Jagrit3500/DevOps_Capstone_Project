@@ -46,9 +46,15 @@ jobs:
       - name: Install dependencies
         working-directory: frontend
         run: npm ci
+      - name: Audit frontend dependencies
+        working-directory: frontend
+        run: npm audit --audit-level=high
       - name: Build frontend
         working-directory: frontend
         run: npm run build
+      - name: Test frontend API pagination
+        working-directory: frontend
+        run: npm test
 
   images:
     name: Build, scan and publish images

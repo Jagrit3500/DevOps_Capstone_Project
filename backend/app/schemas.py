@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import Optional
 import re
 
-from pydantic import BaseModel, field_validator, model_validator
+from pydantic import BaseModel, Field, field_validator, model_validator
 
 from app.models import CandidateStatus, Priority
 
@@ -33,7 +33,7 @@ class CandidateBase(BaseModel):
     status: CandidateStatus = CandidateStatus.APPLIED
     priority: Priority = Priority.MEDIUM
     notes: Optional[str] = None
-    resume_url: Optional[str] = None
+    resume_url: Optional[str] = Field(default=None, max_length=500)
 
     @field_validator("name", "position", "department")
     @classmethod
@@ -58,7 +58,7 @@ class CandidateUpdate(BaseModel):
     status: Optional[CandidateStatus] = None
     priority: Optional[Priority] = None
     notes: Optional[str] = None
-    resume_url: Optional[str] = None
+    resume_url: Optional[str] = Field(default=None, max_length=500)
 
     @field_validator("name", "position", "department")
     @classmethod

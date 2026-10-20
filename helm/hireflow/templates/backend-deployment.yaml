@@ -36,6 +36,8 @@ spec:
                   key: password
             - name: DB_HOST
               value: postgres
+            - name: DB_PORT
+              value: {{ .Values.postgres.port | quote }}
             - name: DB_NAME
               value: {{ .Values.postgres.database | quote }}
       containers:
@@ -54,6 +56,8 @@ spec:
                   key: password
             - name: DB_HOST
               value: postgres
+            - name: DB_PORT
+              value: {{ .Values.postgres.port | quote }}
             - name: DB_NAME
               value: {{ .Values.postgres.database | quote }}
           livenessProbe:

@@ -1,0 +1,31 @@
+﻿Captured: 2026-10-20 Asia/Kolkata
+NAME       SYNC STATUS   HEALTH STATUS   REVISION                                   PROJECT
+hireflow   Synced        Healthy         c5093b61584aa859e0d338d55de34dd2f0e0820e   default
+NAME                       READY   UP-TO-DATE   AVAILABLE   AGE     CONTAINERS   IMAGES                                                                          SELECTOR
+deployment.apps/backend    2/2     2            2           2d11h   backend      ghcr.io/jagrit3500/hireflow-backend:12b13cad69c1f705ca31743012c399635609c1d7    app=backend
+deployment.apps/frontend   2/2     2            2           2d11h   frontend     ghcr.io/jagrit3500/hireflow-frontend:12b13cad69c1f705ca31743012c399635609c1d7   app=frontend
+
+NAME                        READY   AGE     CONTAINERS   IMAGES
+statefulset.apps/postgres   1/1     2d11h   postgres     postgres:16-alpine
+
+NAME                            READY   STATUS    RESTARTS   AGE     IP            NODE                                         NOMINATED NODE   READINESS GATES
+pod/backend-95566fbf8-2xlhw     1/1     Running   0          35m     10.0.10.7     ip-10-0-10-171.ap-south-1.compute.internal   <none>           <none>
+pod/backend-95566fbf8-8d6pw     1/1     Running   0          36m     10.0.11.32    ip-10-0-11-51.ap-south-1.compute.internal    <none>           <none>
+pod/frontend-648b95dcd6-6qvxc   1/1     Running   0          35m     10.0.11.195   ip-10-0-11-51.ap-south-1.compute.internal    <none>           <none>
+pod/frontend-648b95dcd6-76jxb   1/1     Running   0          36m     10.0.10.197   ip-10-0-10-171.ap-south-1.compute.internal   <none>           <none>
+pod/postgres-0                  1/1     Running   0          2d11h   10.0.10.118   ip-10-0-10-171.ap-south-1.compute.internal   <none>           <none>
+
+NAME               TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)    AGE     SELECTOR
+service/backend    ClusterIP   172.20.244.6     <none>        8000/TCP   2d11h   app=backend
+service/frontend   ClusterIP   172.20.255.175   <none>        80/TCP     2d11h   app=frontend
+service/postgres   ClusterIP   172.20.22.96     <none>        5432/TCP   2d11h   app=postgres
+
+NAME                                 CLASS   HOSTS   ADDRESS                                                                          PORTS   AGE
+ingress.networking.k8s.io/hireflow   nginx   *       af4bebcfa4d9047bfab038af45b6c63d-c3b6c49270345fb3.elb.ap-south-1.amazonaws.com   80      43m
+
+NAME                                               REFERENCE             TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
+horizontalpodautoscaler.autoscaling/backend-hpa    Deployment/backend    cpu: 2%/70%   2         8         2          2d11h
+horizontalpodautoscaler.autoscaling/frontend-hpa   Deployment/frontend   cpu: 2%/70%   2         8         2          2d11h
+NAME                                         STATUS   ROLES    AGE     VERSION               INTERNAL-IP   EXTERNAL-IP   OS-IMAGE                        KERNEL-VERSION                     CONTAINER-RUNTIME
+ip-10-0-10-171.ap-south-1.compute.internal   Ready    <none>   2d13h   v1.35.8-eks-b9510e3   10.0.10.171   <none>        Amazon Linux 2023.12.20261012   6.12.111-136.204.amzn2023.x86_64   containerd://2.3.5+unknown
+ip-10-0-11-51.ap-south-1.compute.internal    Ready    <none>   2d13h   v1.35.8-eks-b9510e3   10.0.11.51    <none>        Amazon Linux 2023.12.20261012   6.12.111-136.204.amzn2023.x86_64   containerd://2.3.5+unknown

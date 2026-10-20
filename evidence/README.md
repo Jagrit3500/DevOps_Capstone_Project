@@ -1,12 +1,5 @@
-# Submission screenshots
+# Submission evidence
 
-Place real screenshots from the running application, CI, AWS, Kubernetes,
-Prometheus and Grafana here. `local-app.png` shows the local application with
-a newly added demo candidate. `mobile-app.png` shows the same dashboard at a
-genuine 390px emulated viewport; `node scripts/capture-mobile.mjs` reproduces
-it and checks that the document does not overflow horizontally. `ci-success.png` shows the successful final code CI run. `ghcr-backend.png` and `ghcr-frontend.png` show the
-public packages with SHA tags from the audit-fix commit.
-`commit-history.png` shows all 10 genuine commits on GitHub. The remaining evidence
-is listed in `../EVIDENCE.md`.
+[EVIDENCE.md](../EVIDENCE.md) indexes the real screenshots and current command output. [AUDIT.md](../AUDIT.md) separates verified functionality from missing submission artifacts. Screenshots show the capture-time state; current test counts and deployment revisions are in the text evidence.
 
-Do not include passwords, tokens or AWS account IDs in screenshots.
+Keep passwords, tokens, sign-in prompts, Terraform state, and Secret values out of evidence. Public resource/account identifiers are configuration, not credentials.
