@@ -1,42 +1,67 @@
-Live audit verification - 20 October 2026
-
-At the start of the audit, cluster checks verified 2/2 backend, 2/2 frontend, 1/1 PostgreSQL,
-all monitoring Pods Running, all three PVCs Bound, HPA CPU metrics, two Ready nodes,
-and deployed Helm releases for HireFlow, Argo CD, ingress-nginx, Prometheus, and Grafana.
-Public CRUD smoke test passed and deleted its synthetic record; deletion returned 404.
-Prometheus query up{job="hireflow-backend"} returned 1. Grafana /api/health returned database=ok.
-The local AWS session expired during the attempted final refresh; a new login was initiated.
-The following is the previously captured cluster evidence, not a post-audit rollout capture.
-Final CI/GitOps rollout details are added after the new pipeline completes.
-
-Captured: 2026-10-20 Asia/Kolkata
+Captured: 2026-10-21T00:03:44.5082193+05:30
 NAME       SYNC STATUS   HEALTH STATUS   REVISION                                   PROJECT
-hireflow   Synced        Healthy         c5093b61584aa859e0d338d55de34dd2f0e0820e   default
-NAME                       READY   UP-TO-DATE   AVAILABLE   AGE     CONTAINERS   IMAGES                                                                          SELECTOR
-deployment.apps/backend    2/2     2            2           2d11h   backend      ghcr.io/jagrit3500/hireflow-backend:12b13cad69c1f705ca31743012c399635609c1d7    app=backend
-deployment.apps/frontend   2/2     2            2           2d11h   frontend     ghcr.io/jagrit3500/hireflow-frontend:12b13cad69c1f705ca31743012c399635609c1d7   app=frontend
+hireflow   Synced        Healthy         ecd3bf92628c064de3894965062b0d3bd82e6c91   default
+NAME                       READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/backend    2/2     2            2           3d5h
+deployment.apps/frontend   2/2     2            2           3d5h
 
-NAME                        READY   AGE     CONTAINERS   IMAGES
-statefulset.apps/postgres   1/1     2d11h   postgres     postgres:16-alpine
+NAME                        READY   AGE
+statefulset.apps/postgres   1/1     3d5h
 
-NAME                            READY   STATUS    RESTARTS   AGE     IP            NODE                                         NOMINATED NODE   READINESS GATES
-pod/backend-95566fbf8-2xlhw     1/1     Running   0          35m     10.0.10.7     ip-10-0-10-171.ap-south-1.compute.internal   <none>           <none>
-pod/backend-95566fbf8-8d6pw     1/1     Running   0          36m     10.0.11.32    ip-10-0-11-51.ap-south-1.compute.internal    <none>           <none>
-pod/frontend-648b95dcd6-6qvxc   1/1     Running   0          35m     10.0.11.195   ip-10-0-11-51.ap-south-1.compute.internal    <none>           <none>
-pod/frontend-648b95dcd6-76jxb   1/1     Running   0          36m     10.0.10.197   ip-10-0-10-171.ap-south-1.compute.internal   <none>           <none>
-pod/postgres-0                  1/1     Running   0          2d11h   10.0.10.118   ip-10-0-10-171.ap-south-1.compute.internal   <none>           <none>
+NAME                            READY   STATUS    RESTARTS   AGE
+pod/backend-697b48497d-l7gsk    1/1     Running   0          22m
+pod/backend-697b48497d-xpgw9    1/1     Running   0          21m
+pod/frontend-6954c646c4-946xh   1/1     Running   0          22m
+pod/frontend-6954c646c4-r7jwx   1/1     Running   0          21m
+pod/postgres-0                  1/1     Running   0          3d5h
 
-NAME               TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)    AGE     SELECTOR
-service/backend    ClusterIP   172.20.244.6     <none>        8000/TCP   2d11h   app=backend
-service/frontend   ClusterIP   172.20.255.175   <none>        80/TCP     2d11h   app=frontend
-service/postgres   ClusterIP   172.20.22.96     <none>        5432/TCP   2d11h   app=postgres
+NAME               TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)    AGE
+service/backend    ClusterIP   172.20.244.6     <none>        8000/TCP   3d5h
+service/frontend   ClusterIP   172.20.255.175   <none>        80/TCP     3d5h
+service/postgres   ClusterIP   172.20.22.96     <none>        5432/TCP   3d5h
 
-NAME                                 CLASS   HOSTS   ADDRESS                                                                          PORTS   AGE
-ingress.networking.k8s.io/hireflow   nginx   *       af4bebcfa4d9047bfab038af45b6c63d-c3b6c49270345fb3.elb.ap-south-1.amazonaws.com   80      43m
+NAME                                             STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   VOLUMEATTRIBUTESCLASS   AGE
+persistentvolumeclaim/postgres-data-postgres-0   Bound    pvc-d1205881-d11d-496b-bb66-d6cdf7aa4ffc   5Gi        RWO            hireflow-gp3   <unset>                 3d7h
 
 NAME                                               REFERENCE             TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
-horizontalpodautoscaler.autoscaling/backend-hpa    Deployment/backend    cpu: 2%/70%   2         8         2          2d11h
-horizontalpodautoscaler.autoscaling/frontend-hpa   Deployment/frontend   cpu: 2%/70%   2         8         2          2d11h
-NAME                                         STATUS   ROLES    AGE     VERSION               INTERNAL-IP   EXTERNAL-IP   OS-IMAGE                        KERNEL-VERSION                     CONTAINER-RUNTIME
-ip-10-0-10-171.ap-south-1.compute.internal   Ready    <none>   2d13h   v1.35.8-eks-b9510e3   10.0.10.171   <none>        Amazon Linux 2023.12.20261012   6.12.111-136.204.amzn2023.x86_64   containerd://2.3.5+unknown
-ip-10-0-11-51.ap-south-1.compute.internal    Ready    <none>   2d13h   v1.35.8-eks-b9510e3   10.0.11.51    <none>        Amazon Linux 2023.12.20261012   6.12.111-136.204.amzn2023.x86_64   containerd://2.3.5+unknown
+horizontalpodautoscaler.autoscaling/backend-hpa    Deployment/backend    cpu: 2%/70%   2         8         2          3d5h
+horizontalpodautoscaler.autoscaling/frontend-hpa   Deployment/frontend   cpu: 2%/70%   2         8         2          3d5h
+
+NAME                                 CLASS   HOSTS   ADDRESS                                                                          PORTS   AGE
+ingress.networking.k8s.io/hireflow   nginx   *       af4bebcfa4d9047bfab038af45b6c63d-c3b6c49270345fb3.elb.ap-south-1.amazonaws.com   80      18h
+NAME                                         STATUS   ROLES    AGE    VERSION
+ip-10-0-10-171.ap-south-1.compute.internal   Ready    <none>   3d7h   v1.35.8-eks-b9510e3
+ip-10-0-11-51.ap-south-1.compute.internal    Ready    <none>   3d7h   v1.35.8-eks-b9510e3
+NAME                                                 READY   STATUS    RESTARTS   AGE
+pod/grafana-55cdb8d665-ckdfn                         1/1     Running   0          3d
+pod/prometheus-kube-state-metrics-798fb7d7b8-cjqxm   1/1     Running   0          3d4h
+pod/prometheus-prometheus-node-exporter-nbhg8        1/1     Running   0          3d4h
+pod/prometheus-prometheus-node-exporter-w4qgc        1/1     Running   0          3d4h
+pod/prometheus-server-6fd5d9778f-l42nl               2/2     Running   0          3d4h
+
+NAME                                      STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   VOLUMEATTRIBUTESCLASS   AGE
+persistentvolumeclaim/grafana             Bound    pvc-3dcacda9-2475-4c8a-a334-47db02d36b8e   5Gi        RWO            hireflow-gp3   <unset>                 3d3h
+persistentvolumeclaim/prometheus-server   Bound    pvc-6f7ccfa5-cd06-41fd-a493-a3eb4cf6f551   8Gi        RWO            hireflow-gp3   <unset>                 3d4h
+NAME         	NAMESPACE    	REVISION	UPDATED                              	STATUS  	CHART               	APP VERSION
+argocd       	argocd       	1       	2026-10-20 05:16:38.5782654 +0530 IST	deployed	argo-cd-10.10.5     	v3.5.5
+grafana      	monitoring   	2       	2026-10-17 23:33:05.8100664 +0530 IST	deployed	grafana-14.0.1      	13.2.4
+hireflow     	hireflow     	4       	2026-10-20 05:15:40.3435581 +0530 IST	deployed	hireflow-1.0.0      	1.0.0
+ingress-nginx	ingress-nginx	1       	2026-10-20 05:13:36.7864865 +0530 IST	deployed	ingress-nginx-4.15.1	1.15.1
+prometheus   	monitoring   	1       	2026-10-17 19:43:56.391178 +0530 IST 	deployed	prometheus-29.37.0  	v3.15.0
+PASS: Frontend responds with HTTP 200
+PASS: Backend health is healthy
+PASS: Readiness verifies the database
+PASS: Prometheus request metrics are exposed
+PASS: Create candidate returns an ID
+PASS: Read returns the created candidate
+PASS: Update persists stage and priority
+PASS: Status filter includes the updated candidate
+PASS: Statistics reflect the test candidate
+PASS: Deleted synthetic candidate 4
+PASS: Deleted candidate returns HTTP 404
+{"status":"success","data":{"resultType":"vector","result":[{"metric":{"__name__":"up","instance":"backend.hireflow.svc.cluster.local:8000","job":"hireflow-backend"},"value":[1792521241.252,"1"]}]}}
+{
+  "database": "ok",
+  "version": "13.2.4",
+  "commit": "0e79aef9d91abf3bdadae9af15763029072fb45b"
+}
