@@ -318,7 +318,7 @@ Full docs: **http://localhost:8000/docs**
 | M4 - Docker | Both images built and all three Compose services started locally; [build screenshot](evidence/compose-build-start.png) and [services/database screenshot](evidence/docker-services-database.png) captured |
 | M5 - CI/CD | Tests, frontend build, image builds, Trivy gates, GHCR publication, and GitOps promotion passed in [run 39476145373](https://github.com/Jagrit3500/DevOps_Capstone_Project/actions/runs/39476145373). |
 | M6 - DevSecOps | Both image Trivy HIGH/CRITICAL gates passed in the deployment run; [backend](evidence/trivy-backend-summary.png) and [frontend](evidence/trivy-frontend-summary.png) scan screenshots captured. The frontend runtime updates Alpine packages during its build. |
-| M7 - Terraform | VPC, EKS, EBS CSI, and Metrics Server applied in `ap-south-1`; fmt, validate, and [a captured no-drift plan](evidence/terraform-current-plan.txt) passed. AWS Console screenshots and teardown proof remain. |
+| M7 - Terraform | VPC, EKS, EBS CSI, and Metrics Server applied in `ap-south-1`; fmt, validate, and [a captured no-drift plan](evidence/terraform-current-plan.txt) passed. [AWS Console evidence](evidence/aws-eks.png) and [current plan screenshot](evidence/terraform-plan-result.png) captured; original creation-plan and teardown proof remain. |
 | M8 — Kubernetes + Helm | Two backend and two frontend Pods ready, PostgreSQL running, HPA metrics present, frontend/backend Services are ClusterIP, and Ingress routes `/` and `/api` through ingress-nginx. Argo CD reports Synced and Healthy. |
 | M9 — Observability | Prometheus target UP and Grafana application panels populated; [metrics](evidence/backend-metrics.txt), [Prometheus](evidence/prometheus-targets.png), and [Grafana](evidence/grafana-dashboard.png) evidence captured. |
 | M10 — Documentation | README and audit present; see `demo/` for presentation artifacts and remaining submission steps. |
@@ -330,7 +330,7 @@ Database credentials come from ignored environment configuration locally and the
 
 This capstone exposes a public HTTP API without authentication or TLS. Use fictional records. Database backups, production access control, TLS, and high-availability PostgreSQL are outside the grading requirements. The UI implements the candidate pipeline; calendar and account settings are not implemented or advertised. AWS regional and Docker registry DNS has intermittently failed on this workstation; retry connectivity before changing infrastructure.
 
-The full requirement audit is in [AUDIT.md](AUDIT.md), with [evidence](EVIDENCE.md), a [slide deck](demo/HireFlow_Presentation.pdf), and the [recording guide](demo/VIDEO_SCRIPT.md). A genuine video, AWS Console screenshots, original creation-plan screenshot, and post-evaluation teardown proof remain required. Do not describe the submission as complete until these items and the course form are handled.
+The full requirement audit is in [AUDIT.md](AUDIT.md), with [evidence](EVIDENCE.md), a [slide deck](demo/HireFlow_Presentation.pdf), and the [recording guide](demo/VIDEO_SCRIPT.md). AWS Console and terminal screenshots are collected. A genuine video, original creation-plan screenshot, and post-evaluation teardown proof remain required. Do not describe the submission as complete until these items and the course form are handled.
 
 Verify either the local or public deployment without leaving a test record:
 

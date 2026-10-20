@@ -32,9 +32,8 @@ Verified against the instructor's [grading rubric](https://github.com/Nency-Rava
 ## Evidence still to capture
 
 1. Original nonempty Terraform creation plan screenshot, if available from the provisioning session.
-2. AWS Console screenshots showing the HireFlow VPC and EKS cluster in `ap-south-1`. No AWS Console browser session was accessible to this agent.
-3. Genuine walkthrough MP4 following `demo/VIDEO_SCRIPT.md`.
-4. Successful `terraform destroy` screenshot **after** the evaluation; the live stack is being preserved for the walkthrough and currently incurs AWS charges.
+2. Genuine walkthrough MP4 following `demo/VIDEO_SCRIPT.md`.
+3. Successful `terraform destroy` screenshot **after** the evaluation; the live stack is being preserved for the walkthrough and currently incurs AWS charges.
 
 Keep credentials, database passwords, and Grafana admin passwords out of screenshots and video.
 
@@ -49,6 +48,23 @@ Keep credentials, database passwords, and Grafana admin passwords out of screens
 
 - [Final CI job/step result](evidence/final-ci-result.txt): [run 39476145373](https://github.com/Jagrit3500/DevOps_Capstone_Project/actions/runs/39476145373) succeeded on 21 October. Earlier screenshots are retained as historical evidence.
 
-Additional screenshots still needed: live `kubectl get pods`, `kubectl get svc`, `helm list`, and metrics output. The text checks pass but do not replace screenshots explicitly requested by the rubric.
+The requested Pods, Services, Helm, metrics, and AWS Console screenshots were supplied by the user and saved on 21 October; links follow.
 
 - [Final local Compose verification](evidence/final-compose-verification.txt): immediate CRUD checks passed after readiness gating; backend UID 1001, frontend UID 101.
+
+## User-captured evidence - 21 October 2026
+
+- [AWS VPC](evidence/aws-vpc.png).
+- [AWS public/private subnets](evidence/aws-subnets.png).
+- [AWS EKS cluster](evidence/aws-eks.png).
+- [AWS worker node group](evidence/aws-eks-nodegroup.png).
+- [Running Pods](evidence/kubernetes-pods.png).
+- [ClusterIP Services](evidence/kubernetes-services.png).
+- [Helm release](evidence/helm-release.png).
+- [Argo CD Synced/Healthy](evidence/argocd-status.png).
+- [Ingress](evidence/kubernetes-ingress.png).
+- [Prometheus metrics output](evidence/backend-metrics.png).
+- [Terraform refresh](evidence/terraform-plan-refresh.png).
+- [Terraform no-drift result](evidence/terraform-plan-result.png).
+
+The current Terraform screenshot shows a genuine no-drift plan. It does not represent the original nonempty creation plan. The Argo CD screenshot shows Synced/Healthy at documentation revision `6c10818`; the deployed application source remains `d04a9e7`.

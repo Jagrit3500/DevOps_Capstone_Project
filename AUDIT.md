@@ -6,7 +6,7 @@ Audited on 20 October 2026; final verification on 21 October 2026 against the in
 
 The application and infrastructure are running. The current [GitHub Actions run](https://github.com/Jagrit3500/DevOps_Capstone_Project/actions/runs/39476145373) passed tests, frontend build, two image builds, both Trivy gates, GHCR publication, GitOps promotion, and EKS rollout. Argo CD reports **Synced / Healthy** at revision `71f195c`. The two backend and two frontend replicas, PostgreSQL, ingress controller, Prometheus, and Grafana Pods are healthy. The public Ingress served `/` with HTTP 200, `/health` with `{"status":"healthy"}`, and `/api/candidates/` with `[]`. A synthetic candidate passed create, read, update, statistics, and delete through this Ingress; the record was removed. Prometheus returned `up=1` for `hireflow-backend`.
 
-This is **not yet a complete submission**. The required real walkthrough MP4, AWS Console and terminal screenshots, an original nonempty Terraform plan screenshot, course form, and post-evaluation `terraform destroy` evidence are outstanding. The live stack remains deployed for the demonstration and incurs AWS charges.
+This is **not yet a complete submission**. The required real walkthrough MP4, an original nonempty Terraform plan screenshot, course form, and post-evaluation `terraform destroy` evidence are outstanding. The live stack remains deployed for the demonstration and incurs AWS charges.
 
 ## Rubric matrix
 
@@ -18,9 +18,9 @@ This is **not yet a complete submission**. The required real walkthrough MP4, AW
 | M4 Docker | Both Dockerfiles build, run non-root; frontend has a multi-stage Node/Nginx build; Compose runs frontend, backend, and PostgreSQL. [Build evidence](evidence/compose-build-start.png), [service evidence](evidence/docker-services-database.png). | Met |
 | M5 CI/CD | Push to `main` runs tests before image builds, builds frontend and both images, scans, pushes SHA tags, commits production values, and waits for Argo CD rollout. [Run 39476145373](https://github.com/Jagrit3500/DevOps_Capstone_Project/actions/runs/39476145373), [earlier run screenshot](evidence/ci-gitops-success.png), [GHCR backend](evidence/ghcr-backend.png), [GHCR frontend](evidence/ghcr-frontend.png). | Met |
 | M6 DevSecOps | Trivy scans both images; HIGH/CRITICAL findings fail the job before publication. [Backend](evidence/trivy-backend-summary.png) and [frontend](evidence/trivy-frontend-summary.png) output. Earlier frontend scan found vulnerable Alpine packages; refreshing the runtime packages cleared the blocking scan. | Met |
-| M7 Terraform | Valid HCL, successful init/apply, VPC with two public subnets, EKS and worker node group. Current [no-drift plan](evidence/terraform-current-plan.txt) and [cluster status](evidence/live-gitops-status.txt). | Functionally met; original nonempty plan screenshot, AWS Console VPC/EKS screenshots, and post-evaluation destroy screenshot remain |
-| M8 Kubernetes + Helm | Helm chart renders and deployed. Backend/frontend Services are ClusterIP; Ingress sends `/` to frontend and `/api` to backend. Two replicas each and all Pods Running. [Live status](evidence/live-gitops-status.txt), [Ingress app](evidence/live-ingress-app.png). | Functionality met; requested terminal screenshots remain |
-| M9 Observability | Backend `/metrics`, Prometheus backend target `UP`, Grafana panel data, Bound monitoring PVCs. [Metrics](evidence/backend-metrics.txt), [Prometheus](evidence/prometheus-targets.png), [Grafana](evidence/grafana-dashboard.png). Live Prometheus query returned `up=1`. | Functionality met; metrics-output screenshot remains |
+| M7 Terraform | Valid HCL, successful init/apply, VPC with two public subnets, EKS and worker node group. Current [no-drift plan](evidence/terraform-current-plan.txt) and [cluster status](evidence/live-gitops-status.txt). | Functionally met; original nonempty creation-plan screenshot and post-evaluation destroy screenshot remain; AWS Console and current plan screenshots captured |
+| M8 Kubernetes + Helm | Helm chart renders and deployed. Backend/frontend Services are ClusterIP; Ingress sends `/` to frontend and `/api` to backend. Two replicas each and all Pods Running. [Live status](evidence/live-gitops-status.txt), [Ingress app](evidence/live-ingress-app.png). | Met; [Pods](evidence/kubernetes-pods.png), [Services](evidence/kubernetes-services.png), [Helm](evidence/helm-release.png), [Ingress](evidence/kubernetes-ingress.png) screenshots captured |
+| M9 Observability | Backend `/metrics`, Prometheus backend target `UP`, Grafana panel data, Bound monitoring PVCs. [Metrics](evidence/backend-metrics.txt), [Prometheus](evidence/prometheus-targets.png), [Grafana](evidence/grafana-dashboard.png). Live Prometheus query returned `up=1`. | Met; [metrics screenshot](evidence/backend-metrics.png) captured |
 | M10 Presentation | README covers setup and architecture; [10-page PDF deck](demo/HireFlow_Presentation.pdf) covers all eight required topics. | Partial: real walkthrough MP4 is mandatory and remains |
 
 ## Configuration and security review
@@ -34,7 +34,7 @@ This is **not yet a complete submission**. The required real walkthrough MP4, AW
 ## Remaining submission actions
 
 1. Record a genuine screen-share MP4 following [the recording guide](demo/VIDEO_SCRIPT.md), with slides first and then the live codebase, CI/CD push/run, Terraform plan plus AWS Console VPC/EKS, Argo CD sync, Kubernetes, Prometheus Targets, and Grafana. Save it under `demo/` and commit it or attach it as a GitHub release asset. The recording must show the live tools; exporting the PDF as a slideshow does not meet the video rule.
-2. Capture AWS Console VPC and EKS pages in `ap-south-1`, plus an original nonempty `terraform plan` screenshot if available. The current plan is correctly empty because the resources already exist. Do not modify the infrastructure just to manufacture a nonempty plan.
+2. Recover an original nonempty `terraform plan` screenshot if available. AWS Console VPC/EKS and current plan screenshots are now captured. The current plan is correctly empty because the resources already exist. Do not modify the infrastructure just to manufacture a nonempty plan.
 3. After the evaluation and recording, decide whether to tear down. The rubric asks for a `terraform destroy` completion screenshot. Destruction removes the live cluster and is intentionally deferred until the demo is finished.
 4. Submit the public repository URL through the instructor's form. This external form submission is a user action.
 
@@ -63,7 +63,7 @@ Hardcoding assessment: no committed application credentials were found by the hi
 
 Fresh verification: 22 backend tests passed, two frontend tests passed, frontend production build passed, public CRUD/readiness/metrics checks passed with cleanup, all app and monitoring Pods were Running, all PVCs were Bound, HPA CPU metrics worked, Prometheus reported `up=1`, Grafana health reported database `ok`, and Terraform fmt/validate plus a full-refresh plan passed with no drift. The first Terraform attempt failed on STS DNS; retry succeeded. Existing screenshots remain labeled historical where applicable.
 
-Submission readiness is separate from software health. M1/M2/M4/M5/M6/M8/M9 functionality is verified. M3 still needs the course form. M7 retains the original-plan/Console/destroy evidence gaps, and M10 cannot earn full credit without the actual video. No speculative total score is claimed; the instructor determines points and late penalties.
+Submission readiness is separate from software health. M1/M2/M4/M5/M6/M8/M9 functionality is verified. M3 still needs the course form. M7 retains the original-plan/destroy evidence gaps, and M10 cannot earn full credit without the actual video. No speculative total score is claimed; the instructor determines points and late penalties.
 
 The dependency audit also found Vite 5/esbuild development-server advisories, including [the Windows path access advisory](https://github.com/vitejs/vite/security/advisories/GHSA-fx2h-pf6j-xcff). Vite was upgraded to patched 6.4.4 with its lockfile, and `npm audit` then reported zero vulnerabilities. CI now audits frontend dependencies before building, in addition to scanning both runtime images with Trivy. The rebuilt local Compose application passed the full smoke test, and `id` confirmed backend UID 1001 and frontend UID 101.
 
@@ -77,9 +77,13 @@ The final Compose test caught a brief 502 startup race. The backend now has a da
 Remaining items are submission evidence or user participation, not unverified claims of completion:
 
 1. Record and upload the real walkthrough MP4, including a new push and complete CI run. The recording guide now treats this push as mandatory.
-2. Capture AWS Console VPC/EKS pages and the requested terminal screenshots for Pods, Services, Helm releases, and metrics. Working command transcripts are present. No browser/native desktop surface was available through this session's computer-use tool; creating an in-app browser also failed.
+2. AWS Console and requested terminal screenshots are now collected; see the evidence update below.
 3. Recover the original nonempty creation-plan screenshot if it exists. The current full-refresh plan is genuinely empty because infrastructure matches configuration. No infrastructure was changed to manufacture evidence.
 4. Submit the public repository link through the course form.
 5. After evaluation, explicitly authorize teardown, then capture successful cleanup and Terraform destroy. The live EKS stack remains deployed and incurs charges.
 
 The source lists a deadline of 19 October 2026 at 23:59 IST, with a weekday label that does not match the calendar date, and a late penalty. Confirm any extension with the instructor; this audit does not assume one.
+
+## Screenshot collection complete - 21 October 2026
+
+The user supplied twelve genuine screenshots covering the VPC, four subnets, Active EKS cluster and worker node group, five Running/Ready Pods, ClusterIP Services, deployed Helm release, Synced/Healthy Argo CD, Ingress, Prometheus-formatted metrics, and the completed no-drift Terraform plan. [All captures are indexed here](EVIDENCE.md#user-captured-evidence---21-october-2026). AWS Console and terminal screenshot gaps are closed. The remaining submission items are the original creation-plan screenshot if recoverable, genuine walkthrough video, course form, and post-evaluation teardown evidence.
