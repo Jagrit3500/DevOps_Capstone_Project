@@ -316,7 +316,7 @@ Full docs: **http://localhost:8000/docs**
 | M2 - Testing | 22 pytest cases passed locally; [test screenshot](evidence/pytest-passing.png) captured |
 | M3 - Git | Public repository with more than 10 meaningful commits; [history screenshot](evidence/commit-history.png) captured |
 | M4 - Docker | Both images built and all three Compose services started locally; [build screenshot](evidence/compose-build-start.png) and [services/database screenshot](evidence/docker-services-database.png) captured |
-| M5 - CI/CD | Tests, frontend build, image builds, Trivy gates, GHCR publication, and GitOps promotion passed in [run 39343899906](https://github.com/Jagrit3500/DevOps_Capstone_Project/actions/runs/39343899906). |
+| M5 - CI/CD | Tests, frontend build, image builds, Trivy gates, GHCR publication, and GitOps promotion passed in [run 39476145373](https://github.com/Jagrit3500/DevOps_Capstone_Project/actions/runs/39476145373). |
 | M6 - DevSecOps | Both image Trivy HIGH/CRITICAL gates passed in the deployment run; [backend](evidence/trivy-backend-summary.png) and [frontend](evidence/trivy-frontend-summary.png) scan screenshots captured. The frontend runtime updates Alpine packages during its build. |
 | M7 - Terraform | VPC, EKS, EBS CSI, and Metrics Server applied in `ap-south-1`; fmt, validate, and [a captured no-drift plan](evidence/terraform-current-plan.txt) passed. AWS Console screenshots and teardown proof remain. |
 | M8 — Kubernetes + Helm | Two backend and two frontend Pods ready, PostgreSQL running, HPA metrics present, frontend/backend Services are ClusterIP, and Ingress routes `/` and `/api` through ingress-nginx. Argo CD reports Synced and Healthy. |

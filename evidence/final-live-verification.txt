@@ -1,37 +1,37 @@
-Captured: 2026-10-21T00:03:44.5082193+05:30
+Captured: 2026-10-21T00:22:32.5394196+05:30 Expected image source: d04a9e74108f841999164a6a6d9b1b3b52c413da
 NAME       SYNC STATUS   HEALTH STATUS   REVISION                                   PROJECT
-hireflow   Synced        Healthy         ecd3bf92628c064de3894965062b0d3bd82e6c91   default
-NAME                       READY   UP-TO-DATE   AVAILABLE   AGE
-deployment.apps/backend    2/2     2            2           3d5h
-deployment.apps/frontend   2/2     2            2           3d5h
+hireflow   Synced        Healthy         71f195c26e3053571192e7624436f914698ba063   default
+NAME                       READY   UP-TO-DATE   AVAILABLE   AGE    CONTAINERS   IMAGES                                                                          SELECTOR
+deployment.apps/backend    2/2     2            2           3d5h   backend      ghcr.io/jagrit3500/hireflow-backend:d04a9e74108f841999164a6a6d9b1b3b52c413da    app=backend
+deployment.apps/frontend   2/2     2            2           3d5h   frontend     ghcr.io/jagrit3500/hireflow-frontend:d04a9e74108f841999164a6a6d9b1b3b52c413da   app=frontend
 
-NAME                        READY   AGE
-statefulset.apps/postgres   1/1     3d5h
+NAME                        READY   AGE    CONTAINERS   IMAGES
+statefulset.apps/postgres   1/1     3d5h   postgres     postgres:16-alpine
 
-NAME                            READY   STATUS    RESTARTS   AGE
-pod/backend-697b48497d-l7gsk    1/1     Running   0          22m
-pod/backend-697b48497d-xpgw9    1/1     Running   0          21m
-pod/frontend-6954c646c4-946xh   1/1     Running   0          22m
-pod/frontend-6954c646c4-r7jwx   1/1     Running   0          21m
-pod/postgres-0                  1/1     Running   0          3d5h
+NAME                           READY   STATUS    RESTARTS   AGE    IP            NODE                                         NOMINATED NODE   READINESS GATES
+pod/backend-75db5d8c46-mglhw   1/1     Running   0          12m    10.0.11.186   ip-10-0-11-51.ap-south-1.compute.internal    <none>           <none>
+pod/backend-75db5d8c46-slw6l   1/1     Running   0          12m    10.0.10.245   ip-10-0-10-171.ap-south-1.compute.internal   <none>           <none>
+pod/frontend-6c655dc99-k77hb   1/1     Running   0          12m    10.0.11.188   ip-10-0-11-51.ap-south-1.compute.internal    <none>           <none>
+pod/frontend-6c655dc99-tmmf9   1/1     Running   0          12m    10.0.10.220   ip-10-0-10-171.ap-south-1.compute.internal   <none>           <none>
+pod/postgres-0                 1/1     Running   0          3d5h   10.0.10.118   ip-10-0-10-171.ap-south-1.compute.internal   <none>           <none>
 
-NAME               TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)    AGE
-service/backend    ClusterIP   172.20.244.6     <none>        8000/TCP   3d5h
-service/frontend   ClusterIP   172.20.255.175   <none>        80/TCP     3d5h
-service/postgres   ClusterIP   172.20.22.96     <none>        5432/TCP   3d5h
+NAME               TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)    AGE    SELECTOR
+service/backend    ClusterIP   172.20.244.6     <none>        8000/TCP   3d5h   app=backend
+service/frontend   ClusterIP   172.20.255.175   <none>        80/TCP     3d5h   app=frontend
+service/postgres   ClusterIP   172.20.22.96     <none>        5432/TCP   3d5h   app=postgres
 
-NAME                                             STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   VOLUMEATTRIBUTESCLASS   AGE
-persistentvolumeclaim/postgres-data-postgres-0   Bound    pvc-d1205881-d11d-496b-bb66-d6cdf7aa4ffc   5Gi        RWO            hireflow-gp3   <unset>                 3d7h
+NAME                                             STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   VOLUMEATTRIBUTESCLASS   AGE    VOLUMEMODE
+persistentvolumeclaim/postgres-data-postgres-0   Bound    pvc-d1205881-d11d-496b-bb66-d6cdf7aa4ffc   5Gi        RWO            hireflow-gp3   <unset>                 3d7h   Filesystem
 
 NAME                                               REFERENCE             TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
 horizontalpodautoscaler.autoscaling/backend-hpa    Deployment/backend    cpu: 2%/70%   2         8         2          3d5h
 horizontalpodautoscaler.autoscaling/frontend-hpa   Deployment/frontend   cpu: 2%/70%   2         8         2          3d5h
 
 NAME                                 CLASS   HOSTS   ADDRESS                                                                          PORTS   AGE
-ingress.networking.k8s.io/hireflow   nginx   *       af4bebcfa4d9047bfab038af45b6c63d-c3b6c49270345fb3.elb.ap-south-1.amazonaws.com   80      18h
+ingress.networking.k8s.io/hireflow   nginx   *       af4bebcfa4d9047bfab038af45b6c63d-c3b6c49270345fb3.elb.ap-south-1.amazonaws.com   80      19h
 NAME                                         STATUS   ROLES    AGE    VERSION
-ip-10-0-10-171.ap-south-1.compute.internal   Ready    <none>   3d7h   v1.35.8-eks-b9510e3
-ip-10-0-11-51.ap-south-1.compute.internal    Ready    <none>   3d7h   v1.35.8-eks-b9510e3
+ip-10-0-10-171.ap-south-1.compute.internal   Ready    <none>   3d8h   v1.35.8-eks-b9510e3
+ip-10-0-11-51.ap-south-1.compute.internal    Ready    <none>   3d8h   v1.35.8-eks-b9510e3
 NAME                                                 READY   STATUS    RESTARTS   AGE
 pod/grafana-55cdb8d665-ckdfn                         1/1     Running   0          3d
 pod/prometheus-kube-state-metrics-798fb7d7b8-cjqxm   1/1     Running   0          3d4h
@@ -40,7 +40,7 @@ pod/prometheus-prometheus-node-exporter-w4qgc        1/1     Running   0        
 pod/prometheus-server-6fd5d9778f-l42nl               2/2     Running   0          3d4h
 
 NAME                                      STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   VOLUMEATTRIBUTESCLASS   AGE
-persistentvolumeclaim/grafana             Bound    pvc-3dcacda9-2475-4c8a-a334-47db02d36b8e   5Gi        RWO            hireflow-gp3   <unset>                 3d3h
+persistentvolumeclaim/grafana             Bound    pvc-3dcacda9-2475-4c8a-a334-47db02d36b8e   5Gi        RWO            hireflow-gp3   <unset>                 3d4h
 persistentvolumeclaim/prometheus-server   Bound    pvc-6f7ccfa5-cd06-41fd-a493-a3eb4cf6f551   8Gi        RWO            hireflow-gp3   <unset>                 3d4h
 NAME         	NAMESPACE    	REVISION	UPDATED                              	STATUS  	CHART               	APP VERSION
 argocd       	argocd       	1       	2026-10-20 05:16:38.5782654 +0530 IST	deployed	argo-cd-10.10.5     	v3.5.5
@@ -57,9 +57,14 @@ PASS: Read returns the created candidate
 PASS: Update persists stage and priority
 PASS: Status filter includes the updated candidate
 PASS: Statistics reflect the test candidate
-PASS: Deleted synthetic candidate 4
+PASS: Deleted synthetic candidate 5
 PASS: Deleted candidate returns HTTP 404
-{"status":"success","data":{"resultType":"vector","result":[{"metric":{"__name__":"up","instance":"backend.hireflow.svc.cluster.local:8000","job":"hireflow-backend"},"value":[1792521241.252,"1"]}]}}
+Prometheus query: up{job="hireflow-backend"}
+{"status":"success","data":{"resultType":"vector","result":[{"metric":{"__name__":"up","instance":"backend.hireflow.svc.cluster.local:8000","job":"hireflow-backend"},"value":[1792522367.690,"1"]}]}}
+Prometheus query: sum(rate(http_requests_total{job="hireflow-backend"}[5m]))
+{"status":"success","data":{"resultType":"vector","result":[{"metric":{},"value":[1792522368.869,"1.3964912280701753"]}]}}
+Prometheus query: histogram_quantile(0.95, sum by (le) (rate(http_request_duration_seconds_bucket{job="hireflow-backend"}[5m])))
+{"status":"success","data":{"resultType":"vector","result":[{"metric":{},"value":[1792522369.956,"0.095"]}]}}
 {
   "database": "ok",
   "version": "13.2.4",

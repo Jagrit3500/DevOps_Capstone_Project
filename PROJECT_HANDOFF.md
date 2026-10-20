@@ -1,6 +1,6 @@
 # HireFlow project handoff
 
-Current audit: 20 October 2026, Asia/Kolkata. Repository: `Jagrit3500/DevOps_Capstone_Project`, branch `main`.
+Current audit: 21 October 2026, Asia/Kolkata. Repository: `Jagrit3500/DevOps_Capstone_Project`, branch `main`.
 
 Read [AUDIT.md](AUDIT.md), [EVIDENCE.md](EVIDENCE.md), and [demo/VIDEO_SCRIPT.md](demo/VIDEO_SCRIPT.md) first. These replace the obsolete direct-Helm-CI and frontend-LoadBalancer deployment instructions.
 
@@ -23,3 +23,5 @@ Terraform state is local in `terraform/` and represents real resources. Preserve
 The real MP4 presentation, AWS Console VPC/EKS screenshots, original nonempty creation-plan screenshot if recoverable, and course form submission remain. No computer/browser session was exposed to this agent for the recording or AWS Console. The PDF deck and recording script are ready. The video must show a new push and CI run, not only an earlier green run.
 
 Keep the infrastructure live for the presentation. After evaluation, obtain the user's explicit teardown decision, uninstall Kubernetes resources that create AWS load balancers/volumes, then destroy the preserved Terraform stack and verify cloud cleanup. The live stack incurs charges; no destruction has been authorized or performed.
+
+Final successful pipeline: [39476145373](https://github.com/Jagrit3500/DevOps_Capstone_Project/actions/runs/39476145373); deployed app source `d04a9e74108f841999164a6a6d9b1b3b52c413da`, captured Argo revision `71f195c26e3053571192e7624436f914698ba063`. Compose now waits for backend readiness. AWS login refreshed successfully; the final live checks passed. Remaining screenshot requirements include terminal Pods/Services/Helm/metrics captures in addition to the Console pages.

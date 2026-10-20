@@ -4,6 +4,8 @@ The [submission instructions](https://github.com/Nency-Ravaliya/devsecops-python
 
 ## 1. Slides, about 2 minutes
 
+The deck shows the verified 20 October deployment snapshot. Use `evidence/final-ci-result.txt` and `evidence/final-live-verification.txt` for the latest source SHA and Argo CD revision during the live section.
+
 Present the ten slides in order. Explain that HireFlow tracks candidates through hiring stages, with a FastAPI API, React frontend, and PostgreSQL database. On the architecture slide, explain that CI publishes scanned images and commits SHA tags to Git, Argo CD syncs the Helm chart, and Ingress sends public requests to internal Services. The PDF is the required slide deck; keep it open at full screen.
 
 ## 2. Codebase, about 1 minute
@@ -12,7 +14,7 @@ Show `backend/app/routes.py`, `backend/alembic/versions/001_initial.py`, `fronte
 
 ## 3. CI/CD, about 5 minutes including the run
 
-Show the public [successful GitOps pipeline](https://github.com/Jagrit3500/DevOps_Capstone_Project/actions/runs/39343899906): backend tests, frontend build, build/scan/publish, and promotion. Show the SHA tag in GHCR and the bot commit that updated `helm/hireflow/values-prod.yaml`. If the evaluator insists on a push during the recording, make a small meaningful documentation change, commit it **without** `[skip ci]`, and push to `main`; wait for the new pipeline to finish and show the new image SHA and Argo CD revision. A documentation-only push still rebuilds images because the workflow runs on every push to `main`.
+During the recording, make a small meaningful documentation change, commit it **without** `[skip ci]`, and push to `main`. This live push is required by the submission rules. Show the new GitHub Actions run completing backend tests, frontend dependency audit/tests/build, image builds, both Trivy scans, GHCR publication, and GitOps promotion. Wait for it to finish, then show the SHA tag in GHCR, the bot commit in `helm/hireflow/values-prod.yaml`, and the matching deployment and Argo CD revision. A documentation-only push still rebuilds images because the workflow runs on every push to `main`. The earlier [successful audit pipeline](https://github.com/Jagrit3500/DevOps_Capstone_Project/actions/runs/39472054163) is a useful rehearsal.
 
 ## 4. Terraform and AWS Console, about 2 minutes
 
@@ -39,6 +41,8 @@ kubectl get svc ingress-nginx-controller -n ingress-nginx
 ```
 
 Show two Ready backend Pods, two Ready frontend Pods, one Ready PostgreSQL Pod, two ClusterIP app Services, and Ingress paths `/` and `/api`. Open the Ingress load balancer DNS name in the browser and refresh the live app.
+
+Also capture readable terminal screenshots of `kubectl get pods -n hireflow`, `kubectl get svc -n hireflow`, and `helm list -n hireflow` for the rubric. The existing text transcripts verify these checks but do not replace the requested screenshots. Capture `/metrics` output too.
 
 ## 7. Prometheus, about 1 minute
 

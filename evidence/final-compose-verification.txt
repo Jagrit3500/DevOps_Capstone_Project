@@ -1,0 +1,18 @@
+﻿Captured: 2026-10-21T00:22:47.1774165+05:30
+PASS: Frontend responds with HTTP 200
+PASS: Backend health is healthy
+PASS: Readiness verifies the database
+PASS: Prometheus request metrics are exposed
+PASS: Create candidate returns an ID
+PASS: Read returns the created candidate
+PASS: Update persists stage and priority
+PASS: Status filter includes the updated candidate
+PASS: Statistics reflect the test candidate
+PASS: Deleted synthetic candidate 12
+PASS: Deleted candidate returns HTTP 404
+NAME                        IMAGE                     COMMAND                  SERVICE    CREATED          STATUS                    PORTS
+devops_project-backend-1    devops_project-backend    "sh -c 'python -m ap…"   backend    19 minutes ago   Up 19 minutes (healthy)   0.0.0.0:8000->8000/tcp, [::]:8000->8000/tcp
+devops_project-frontend-1   devops_project-frontend   "/docker-entrypoint.…"   frontend   19 minutes ago   Up 18 minutes             0.0.0.0:3000->8080/tcp, [::]:3000->8080/tcp
+devops_project-postgres-1   postgres:16-alpine        "docker-entrypoint.s…"   postgres   4 days ago       Up 9 hours (healthy)      5432/tcp
+uid=1001(appuser) gid=1001(appgroup) groups=1001(appgroup)
+uid=101(nginx) gid=101(nginx) groups=101(nginx)

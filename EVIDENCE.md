@@ -12,7 +12,7 @@ Verified against the instructor's [grading rubric](https://github.com/Nency-Rava
 ## Git, CI/CD, and security
 
 - [Commit history](evidence/commit-history.png).
-- [Successful GitOps workflow screenshot](evidence/ci-gitops-success.png) and [run 39343899906](https://github.com/Jagrit3500/DevOps_Capstone_Project/actions/runs/39343899906). Its tests, frontend build, image builds, both Trivy scans, GHCR publication, and image promotion jobs passed.
+- [Earlier GitOps workflow screenshot](evidence/ci-gitops-success.png) and [run 39476145373](https://github.com/Jagrit3500/DevOps_Capstone_Project/actions/runs/39476145373). Its tests, frontend build, image builds, both Trivy scans, GHCR publication, and image promotion jobs passed.
 - [GHCR backend](evidence/ghcr-backend.png) and [GHCR frontend](evidence/ghcr-frontend.png) package screenshots.
 - [Backend Trivy result](evidence/trivy-backend-summary.png) and [frontend Trivy result](evidence/trivy-frontend-summary.png). Trivy checked operating system and installed application packages in both runtime images for HIGH and CRITICAL vulnerabilities; the strict gate passed. Vulnerability results can change when its database or the images change.
 
@@ -46,3 +46,9 @@ Keep credentials, database passwords, and Grafana admin passwords out of screens
 - [Current Terraform plan](evidence/terraform-current-plan.txt) is a full-refresh, no-drift plan, not the original creation plan.
 - [Current live verification](evidence/final-live-verification.txt) records public API smoke checks, resource readiness, Argo CD, Prometheus, Grafana, and Helm releases.
 - [Secret scan summary](evidence/secret-scan-summary.txt) records the redacted Gitleaks result. Scanner findings containing possible secrets are excluded from Git.
+
+- [Final CI job/step result](evidence/final-ci-result.txt): [run 39476145373](https://github.com/Jagrit3500/DevOps_Capstone_Project/actions/runs/39476145373) succeeded on 21 October. Earlier screenshots are retained as historical evidence.
+
+Additional screenshots still needed: live `kubectl get pods`, `kubectl get svc`, `helm list`, and metrics output. The text checks pass but do not replace screenshots explicitly requested by the rubric.
+
+- [Final local Compose verification](evidence/final-compose-verification.txt): immediate CRUD checks passed after readiness gating; backend UID 1001, frontend UID 101.

@@ -1,0 +1,53 @@
+Final CI verification - 21 October 2026
+Run: https://github.com/Jagrit3500/DevOps_Capstone_Project/actions/runs/39476145373
+Source SHA: d04a9e74108f841999164a6a6d9b1b3b52c413da
+Status: completed
+Conclusion: success
+Job: Backend tests - success
+  Set up job: success
+  Run actions/checkout@v4: success
+  Run actions/setup-python@v5: success
+  Install dependencies: success
+  Run tests: success
+  Post Run actions/setup-python@v5: success
+  Post Run actions/checkout@v4: success
+  Complete job: success
+Job: Build React frontend - success
+  Set up job: success
+  Run actions/checkout@v4: success
+  Run actions/setup-node@v4: success
+  Install dependencies: success
+  Audit frontend dependencies: success
+  Build frontend: success
+  Test frontend API pagination: success
+  Post Run actions/setup-node@v4: success
+  Post Run actions/checkout@v4: success
+  Complete job: success
+Job: Build, scan and publish images - success
+  Set up job: success
+  Run actions/checkout@v4: success
+  Set lowercase image names: success
+  Run docker/login-action@v3: success
+  Build backend image: success
+  Build frontend image: success
+  Scan backend image: success
+  Scan frontend image: success
+  Publish scanned images: success
+  Post Scan frontend image: success
+  Post Scan backend image: success
+  Post Run docker/login-action@v3: success
+  Post Run actions/checkout@v4: success
+  Complete job: success
+Job: Promote image tags through GitOps - success
+  Set up job: success
+  Run actions/checkout@v4: success
+  Run aws-actions/configure-aws-credentials@v4: success
+  Configure kubectl: success
+  Verify database secret: success
+  Promote scanned images in Git: success
+  Wait for Argo CD deployment: success
+  Post Run aws-actions/configure-aws-credentials@v4: success
+  Post Run actions/checkout@v4: success
+  Complete job: success
+Argo CD: Synced / Healthy at 71f195c26e3053571192e7624436f914698ba063
+Both Deployments: 2/2 available; exact image coordinates are in final-live-verification.txt.

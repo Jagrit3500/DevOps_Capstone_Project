@@ -1,26 +1,26 @@
 # HireFlow capstone audit
 
-Audited on 20 October 2026 against the instructor's [submission rules](https://github.com/Nency-Ravaliya/devsecops-python/blob/main/SUBMISSION.md) and [100 point grading rubric](https://github.com/Nency-Ravaliya/devsecops-python/blob/main/GRADING.md). The reference repository was inspected for its instructions and example structure; HireFlow is an independent recruitment application.
+Audited on 20 October 2026; final verification on 21 October 2026 against the instructor's [submission rules](https://github.com/Nency-Ravaliya/devsecops-python/blob/main/SUBMISSION.md) and [100 point grading rubric](https://github.com/Nency-Ravaliya/devsecops-python/blob/main/GRADING.md). The reference repository was inspected for its instructions and example structure; HireFlow is an independent recruitment application.
 
 ## Result
 
-The application and infrastructure are running. The current [GitHub Actions run](https://github.com/Jagrit3500/DevOps_Capstone_Project/actions/runs/39343899906) passed tests, frontend build, two image builds, both Trivy gates, GHCR publication, GitOps promotion, and EKS rollout. Argo CD reports **Synced / Healthy** at revision `c5093b6`. The two backend and two frontend replicas, PostgreSQL, ingress controller, Prometheus, and Grafana Pods are healthy. The public Ingress served `/` with HTTP 200, `/health` with `{"status":"healthy"}`, and `/api/candidates/` with `[]`. A synthetic candidate passed create, read, update, statistics, and delete through this Ingress; the record was removed. Prometheus returned `up=1` for `hireflow-backend`.
+The application and infrastructure are running. The current [GitHub Actions run](https://github.com/Jagrit3500/DevOps_Capstone_Project/actions/runs/39476145373) passed tests, frontend build, two image builds, both Trivy gates, GHCR publication, GitOps promotion, and EKS rollout. Argo CD reports **Synced / Healthy** at revision `71f195c`. The two backend and two frontend replicas, PostgreSQL, ingress controller, Prometheus, and Grafana Pods are healthy. The public Ingress served `/` with HTTP 200, `/health` with `{"status":"healthy"}`, and `/api/candidates/` with `[]`. A synthetic candidate passed create, read, update, statistics, and delete through this Ingress; the record was removed. Prometheus returned `up=1` for `hireflow-backend`.
 
-This is **not yet a complete submission**. The required real walkthrough MP4, AWS Console screenshots, an original nonempty Terraform plan screenshot, and post-evaluation `terraform destroy` evidence are outstanding. The live stack remains deployed for the demonstration and incurs AWS charges.
+This is **not yet a complete submission**. The required real walkthrough MP4, AWS Console and terminal screenshots, an original nonempty Terraform plan screenshot, course form, and post-evaluation `terraform destroy` evidence are outstanding. The live stack remains deployed for the demonstration and incurs AWS charges.
 
 ## Rubric matrix
 
 | Module | Requirement and evidence | Status |
 | --- | --- | --- |
 | M1 Application | FastAPI `/health`; GET/POST/PUT/DELETE candidate API; PostgreSQL with Alembic migration; responsive React UI. Local and [current Ingress screenshot](evidence/live-ingress-app.png). Live CRUD smoke test passed and cleaned up. | Met |
-| M2 Testing | `backend/tests/` contains 22 cases and an isolated SQLite test database. Local `pytest -q` passed 22/22; CI test job passed. [Test evidence](evidence/pytest-passing.png). | Met |
+| M2 Testing | `backend/tests/` contains 22 cases and an isolated SQLite test database. Local `pytest -q` passed 22/22; CI test job passed. [Current 22-case output](evidence/audit-validation.txt), [earlier 19-case screenshot](evidence/pytest-passing.png). | Met |
 | M3 Git | Public repository with more than ten meaningful commits and `.gitignore` for secrets/build artifacts. [Commit history](evidence/commit-history.png). | Met; repository URL still must be submitted in the course form |
 | M4 Docker | Both Dockerfiles build, run non-root; frontend has a multi-stage Node/Nginx build; Compose runs frontend, backend, and PostgreSQL. [Build evidence](evidence/compose-build-start.png), [service evidence](evidence/docker-services-database.png). | Met |
-| M5 CI/CD | Push to `main` runs tests before image builds, builds frontend and both images, scans, pushes SHA tags, commits production values, and waits for Argo CD rollout. [Run 39343899906](https://github.com/Jagrit3500/DevOps_Capstone_Project/actions/runs/39343899906), [screenshot](evidence/ci-gitops-success.png), [GHCR backend](evidence/ghcr-backend.png), [GHCR frontend](evidence/ghcr-frontend.png). | Met |
+| M5 CI/CD | Push to `main` runs tests before image builds, builds frontend and both images, scans, pushes SHA tags, commits production values, and waits for Argo CD rollout. [Run 39476145373](https://github.com/Jagrit3500/DevOps_Capstone_Project/actions/runs/39476145373), [earlier run screenshot](evidence/ci-gitops-success.png), [GHCR backend](evidence/ghcr-backend.png), [GHCR frontend](evidence/ghcr-frontend.png). | Met |
 | M6 DevSecOps | Trivy scans both images; HIGH/CRITICAL findings fail the job before publication. [Backend](evidence/trivy-backend-summary.png) and [frontend](evidence/trivy-frontend-summary.png) output. Earlier frontend scan found vulnerable Alpine packages; refreshing the runtime packages cleared the blocking scan. | Met |
 | M7 Terraform | Valid HCL, successful init/apply, VPC with two public subnets, EKS and worker node group. Current [no-drift plan](evidence/terraform-current-plan.txt) and [cluster status](evidence/live-gitops-status.txt). | Functionally met; original nonempty plan screenshot, AWS Console VPC/EKS screenshots, and post-evaluation destroy screenshot remain |
-| M8 Kubernetes + Helm | Helm chart renders and deployed. Backend/frontend Services are ClusterIP; Ingress sends `/` to frontend and `/api` to backend. Two replicas each and all Pods Running. [Live status](evidence/live-gitops-status.txt), [Ingress app](evidence/live-ingress-app.png). | Met |
-| M9 Observability | Backend `/metrics`, Prometheus backend target `UP`, Grafana panel data, Bound monitoring PVCs. [Metrics](evidence/backend-metrics.txt), [Prometheus](evidence/prometheus-targets.png), [Grafana](evidence/grafana-dashboard.png). Live Prometheus query returned `up=1`. | Met |
+| M8 Kubernetes + Helm | Helm chart renders and deployed. Backend/frontend Services are ClusterIP; Ingress sends `/` to frontend and `/api` to backend. Two replicas each and all Pods Running. [Live status](evidence/live-gitops-status.txt), [Ingress app](evidence/live-ingress-app.png). | Functionality met; requested terminal screenshots remain |
+| M9 Observability | Backend `/metrics`, Prometheus backend target `UP`, Grafana panel data, Bound monitoring PVCs. [Metrics](evidence/backend-metrics.txt), [Prometheus](evidence/prometheus-targets.png), [Grafana](evidence/grafana-dashboard.png). Live Prometheus query returned `up=1`. | Functionality met; metrics-output screenshot remains |
 | M10 Presentation | README covers setup and architecture; [10-page PDF deck](demo/HireFlow_Presentation.pdf) covers all eight required topics. | Partial: real walkthrough MP4 is mandatory and remains |
 
 ## Configuration and security review
@@ -66,3 +66,20 @@ Fresh verification: 22 backend tests passed, two frontend tests passed, frontend
 Submission readiness is separate from software health. M1/M2/M4/M5/M6/M8/M9 functionality is verified. M3 still needs the course form. M7 retains the original-plan/Console/destroy evidence gaps, and M10 cannot earn full credit without the actual video. No speculative total score is claimed; the instructor determines points and late penalties.
 
 The dependency audit also found Vite 5/esbuild development-server advisories, including [the Windows path access advisory](https://github.com/vitejs/vite/security/advisories/GHSA-fx2h-pf6j-xcff). Vite was upgraded to patched 6.4.4 with its lockfile, and `npm audit` then reported zero vulnerabilities. CI now audits frontend dependencies before building, in addition to scanning both runtime images with Trivy. The rebuilt local Compose application passed the full smoke test, and `id` confirmed backend UID 1001 and frontend UID 101.
+
+
+## Final result - 21 October 2026
+
+[Run 39476145373](https://github.com/Jagrit3500/DevOps_Capstone_Project/actions/runs/39476145373) passed all jobs, including 22 backend tests, frontend dependency audit, frontend build and two pagination tests, both Docker image builds, strict Trivy gates, GHCR publication, and GitOps promotion. The deployed source SHA is `d04a9e74108f841999164a6a6d9b1b3b52c413da`. Argo CD was Synced/Healthy at `71f195c26e3053571192e7624436f914698ba063` with both app Deployments 2/2 ready. [Final CI evidence](evidence/final-ci-result.txt) and [live checks](evidence/final-live-verification.txt) record the results.
+
+The final Compose test caught a brief 502 startup race. The backend now has a database readiness healthcheck, and the frontend waits for it. `docker compose up --build --wait --wait-timeout 120 -d` then passed, followed immediately by the full CRUD smoke test. Both runtime containers use non-root users. The committed ten-page PDF contains an actual architecture diagram and all required slide topics; it matches the local binary byte-for-byte. Earlier screenshot captures show their capture-time versions.
+
+Remaining items are submission evidence or user participation, not unverified claims of completion:
+
+1. Record and upload the real walkthrough MP4, including a new push and complete CI run. The recording guide now treats this push as mandatory.
+2. Capture AWS Console VPC/EKS pages and the requested terminal screenshots for Pods, Services, Helm releases, and metrics. Working command transcripts are present. No browser/native desktop surface was available through this session's computer-use tool; creating an in-app browser also failed.
+3. Recover the original nonempty creation-plan screenshot if it exists. The current full-refresh plan is genuinely empty because infrastructure matches configuration. No infrastructure was changed to manufacture evidence.
+4. Submit the public repository link through the course form.
+5. After evaluation, explicitly authorize teardown, then capture successful cleanup and Terraform destroy. The live EKS stack remains deployed and incurs charges.
+
+The source lists a deadline of 19 October 2026 at 23:59 IST, with a weekday label that does not match the calendar date, and a late penalty. Confirm any extension with the instructor; this audit does not assume one.
