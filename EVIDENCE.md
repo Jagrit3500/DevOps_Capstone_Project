@@ -31,9 +31,8 @@ Verified against the instructor's [grading rubric](https://github.com/Nency-Rava
 
 ## Evidence still to capture
 
-1. Original nonempty Terraform creation plan screenshot, if available from the provisioning session.
-2. Genuine walkthrough MP4 following `demo/VIDEO_SCRIPT.md`.
-3. Successful `terraform destroy` screenshot **after** the evaluation; the live stack is being preserved for the walkthrough and currently incurs AWS charges.
+1. Genuine walkthrough MP4 following `demo/VIDEO_SCRIPT.md`.
+2. Successful `terraform destroy` screenshot **after** the evaluation; the live stack is being preserved for the walkthrough and currently incurs AWS charges.
 
 Keep credentials, database passwords, and Grafana admin passwords out of screenshots and video.
 
@@ -68,3 +67,9 @@ The requested Pods, Services, Helm, metrics, and AWS Console screenshots were su
 - [Terraform no-drift result](evidence/terraform-plan-result.png).
 
 The current Terraform screenshot shows a genuine no-drift plan. It does not represent the original nonempty creation plan. The Argo CD screenshot shows Synced/Healthy at documentation revision `6c10818`; the deployed application source remains `d04a9e7`.
+
+## Original creation-plan recovery
+
+The original user-provided plan text was recovered from the provisioning conversation: **26 to add, 0 to change, 0 to destroy**. [Archived output](evidence/terraform-original-creation-plan.txt) and [recovery provenance](evidence/terraform-plan-recovery.md) are preserved. An original screenshot was not found; any screenshot of the recovered file must be labelled as an archived-output display.
+
+- [Labelled screenshot of recovered original plan output](evidence/terraform-original-plan-archived.png), captured by the user on 21 October. It displays the archived 17 October plan summary: 26 to add, 0 to change, 0 to destroy. This is a new screenshot of recovered historical text; the original screenshot was not found. The transcript and provenance are linked above.

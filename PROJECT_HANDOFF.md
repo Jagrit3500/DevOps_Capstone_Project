@@ -20,10 +20,10 @@ Terraform state is local in `terraform/` and represents real resources. Preserve
 
 ## Remaining submission work
 
-The real MP4 presentation, original nonempty creation-plan screenshot if recoverable, and course form submission remain. No computer/browser session was exposed to this agent for the recording or AWS Console. The PDF deck and recording script are ready. The video must show a new push and CI run, not only an earlier green run.
+The real MP4 presentation and course form submission remain. The original 26-resource plan was recovered as text, with provenance and a labelled screenshot of its archived display; the original screenshot was not found. No computer/browser session was exposed to this agent for the recording or AWS Console. The PDF deck and recording script are ready. The video must show a new push and CI run, not only an earlier green run.
 
 Keep the infrastructure live for the presentation. After evaluation, obtain the user's explicit teardown decision, uninstall Kubernetes resources that create AWS load balancers/volumes, then destroy the preserved Terraform stack and verify cloud cleanup. The live stack incurs charges; no destruction has been authorized or performed.
 
 Final successful pipeline: [39476145373](https://github.com/Jagrit3500/DevOps_Capstone_Project/actions/runs/39476145373); deployed app source `d04a9e74108f841999164a6a6d9b1b3b52c413da`, captured Argo revision `71f195c26e3053571192e7624436f914698ba063`. Compose now waits for backend readiness. AWS login refreshed successfully; the final live checks passed. The user subsequently supplied all Console and terminal screenshots; see EVIDENCE.md.
 
-On 21 October, twelve user-captured screenshots were saved under evidence/ and linked in EVIDENCE.md. AWS Console, Pods/Services/Helm/Ingress/Argo/metrics, and current Terraform plan evidence are collected. Video is intentionally deferred until last at the user's request. Next, establish whether an original nonempty creation-plan screenshot exists.
+On 21 October, twelve user-captured screenshots were saved under evidence/ and linked in EVIDENCE.md. AWS Console, Pods/Services/Helm/Ingress/Argo/metrics, and current Terraform plan evidence are collected. Video is intentionally deferred until last at the user's request. The original plan text was subsequently recovered from the provisioning conversation, and the user supplied a labelled screenshot of its archived display.
