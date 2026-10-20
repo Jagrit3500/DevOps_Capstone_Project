@@ -1,5 +1,7 @@
 # HireFlow recording guide
 
+For exact narration and detailed screen actions, use [the complete read-aloud script](READ_ALOUD_SCRIPT.md). It includes recorder setup, each slide, every live section, and saving the MP4.
+
 The [submission instructions](https://github.com/Nency-Ravaliya/devsecops-python/blob/main/SUBMISSION.md) require a real MP4 screen share. Start with the [PDF slides](HireFlow_Presentation.pdf), then show the live tools in this order. Record at a readable 1080p resolution and keep passwords, tokens, Secret values, and AWS sign-in prompts out of the capture. Sign in to AWS, GitHub, Argo CD, and Grafana before starting the recording.
 
 ## 1. Slides, about 2 minutes
@@ -50,7 +52,7 @@ In a separate terminal run `kubectl port-forward -n monitoring svc/prometheus-se
 
 ## 8. Grafana, about 1 minute
 
-In a separate terminal run `kubectl port-forward -n monitoring svc/grafana 3000:80`; open the HireFlow dashboard at `http://localhost:3000` and show the requests and latency panels with data. Sign in before the recording so the password never appears on screen. Close the port forward afterward.
+In a separate terminal set `$env:AWS_PROFILE = 'hireflow-admin'`, then run `kubectl port-forward -n monitoring svc/grafana 3001:80`; open the HireFlow dashboard at `http://localhost:3001` and show the requests and latency panels with data. Port 3001 avoids conflict with the local Compose frontend on port 3000. Sign in before the recording so the password never appears on screen. Close the port forward afterward.
 
 ## After the recording
 
