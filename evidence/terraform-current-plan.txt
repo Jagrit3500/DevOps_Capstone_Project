@@ -1,45 +1,43 @@
-data.aws_iam_policy_document.ec2_assume_role: Reading...
-data.aws_iam_policy_document.eks_assume_role: Reading...
-data.aws_availability_zones.available: Reading...
-data.aws_iam_policy_document.ebs_csi_assume_role: Reading...
-data.aws_iam_policy_document.ec2_assume_role: Read complete after 0s [id=2851119427]
-data.aws_iam_policy_document.eks_assume_role: Read complete after 0s [id=3552664922]
-data.aws_iam_policy_document.ebs_csi_assume_role: Read complete after 0s [id=819195744]
-aws_vpc.main: Refreshing state... [id=vpc-06fe21419eb9ec1f1]
-aws_iam_openid_connect_provider.github_actions: Refreshing state... [id=arn:aws:iam::599499160166:oidc-provider/token.actions.githubusercontent.com]
-aws_iam_role.eks_cluster: Refreshing state... [id=hireflow-eks-cluster-role]
-aws_iam_role.eks_nodes: Refreshing state... [id=hireflow-eks-node-role]
-aws_iam_role.ebs_csi: Refreshing state... [id=hireflow-ebs-csi-role]
-data.aws_availability_zones.available: Read complete after 3s [id=ap-south-1]
-aws_internet_gateway.igw: Refreshing state... [id=igw-087813f41f5ec0905]
-aws_subnet.public[0]: Refreshing state... [id=subnet-022dec733ff304cc8]
-aws_subnet.private[0]: Refreshing state... [id=subnet-0c13f8d6546cb2757]
-aws_subnet.public[1]: Refreshing state... [id=subnet-090414bb0a6b3c14b]
-aws_subnet.private[1]: Refreshing state... [id=subnet-05dba04583dd73d55]
-aws_eip.nat: Refreshing state... [id=eipalloc-0c40712d2733885e3]
-aws_route_table.public: Refreshing state... [id=rtb-0b9fc267178fae4eb]
-aws_route_table_association.public[0]: Refreshing state... [id=rtbassoc-0e02468a639db5b23]
-aws_route_table_association.public[1]: Refreshing state... [id=rtbassoc-0e74c700a5cb3d205]
-aws_nat_gateway.nat: Refreshing state... [id=nat-00d230a22bf80796b]
-aws_route_table.private: Refreshing state... [id=rtb-02459a6ad1bc3520e]
-aws_route_table_association.private[0]: Refreshing state... [id=rtbassoc-01a2a95f2a7f8011a]
-aws_route_table_association.private[1]: Refreshing state... [id=rtbassoc-0cf510ccac0864982]
-data.aws_iam_policy_document.github_actions_assume_role: Reading...
-data.aws_iam_policy_document.github_actions_assume_role: Read complete after 0s [id=179651082]
-aws_iam_role.github_actions_deploy: Refreshing state... [id=hireflow-github-deploy-role]
-aws_iam_role_policy_attachment.eks_cni_policy: Refreshing state... [id=hireflow-eks-node-role-20261016235510374800000001]
-aws_iam_role_policy_attachment.eks_worker_node_policy: Refreshing state... [id=hireflow-eks-node-role-20261016235510689200000004]
-aws_iam_role_policy_attachment.ec2_container_registry_read: Refreshing state... [id=hireflow-eks-node-role-20261016235510439500000003]
-aws_iam_role_policy_attachment.eks_cluster_policy: Refreshing state... [id=hireflow-eks-cluster-role-20261016235510432800000002]
-aws_iam_role_policy_attachment.ebs_csi: Refreshing state... [id=hireflow-ebs-csi-role-20261016235510743300000005]
-aws_eks_cluster.main: Refreshing state... [id=hireflow-eks]
-aws_iam_role_policy.github_actions_describe_cluster: Refreshing state... [id=hireflow-github-deploy-role:hireflow-describe-eks]
-aws_eks_node_group.workers: Refreshing state... [id=hireflow-eks:hireflow-workers]
-aws_eks_addon.metrics_server: Refreshing state... [id=hireflow-eks:metrics-server]
-aws_eks_addon.pod_identity_agent: Refreshing state... [id=hireflow-eks:eks-pod-identity-agent]
-aws_eks_addon.ebs_csi: Refreshing state... [id=hireflow-eks:aws-ebs-csi-driver]
-
-No changes. Your infrastructure matches the configuration.
-
-Terraform has compared your real infrastructure against your configuration
-and found no differences, so no changes are needed.
+data.aws_iam_policy_document.ec2_assume_role: Reading...
+data.aws_iam_policy_document.eks_assume_role: Reading...
+data.aws_availability_zones.available: Reading...
+data.aws_iam_policy_document.ebs_csi_assume_role: Reading...
+data.aws_iam_policy_document.ec2_assume_role: Read complete after 0s [id=2851119427]
+data.aws_iam_policy_document.eks_assume_role: Read complete after 0s [id=3552664922]
+data.aws_iam_policy_document.ebs_csi_assume_role: Read complete after 0s [id=819195744]
+aws_vpc.main: Refreshing state... [id=vpc-06fe21419eb9ec1f1]
+aws_iam_openid_connect_provider.github_actions: Refreshing state... [id=arn:aws:iam::599499160166:oidc-provider/token.actions.githubusercontent.com]
+aws_iam_role.eks_cluster: Refreshing state... [id=hireflow-eks-cluster-role]
+aws_iam_role.eks_nodes: Refreshing state... [id=hireflow-eks-node-role]
+aws_iam_role.ebs_csi: Refreshing state... [id=hireflow-ebs-csi-role]
+data.aws_availability_zones.available: Read complete after 3s [id=ap-south-1]
+aws_internet_gateway.igw: Refreshing state... [id=igw-087813f41f5ec0905]
+aws_subnet.public[0]: Refreshing state... [id=subnet-022dec733ff304cc8]
+aws_subnet.private[0]: Refreshing state... [id=subnet-0c13f8d6546cb2757]
+aws_subnet.public[1]: Refreshing state... [id=subnet-090414bb0a6b3c14b]
+aws_subnet.private[1]: Refreshing state... [id=subnet-05dba04583dd73d55]
+aws_eip.nat: Refreshing state... [id=eipalloc-0c40712d2733885e3]
+aws_route_table.public: Refreshing state... [id=rtb-0b9fc267178fae4eb]
+aws_route_table_association.public[0]: Refreshing state... [id=rtbassoc-0e02468a639db5b23]
+aws_route_table_association.public[1]: Refreshing state... [id=rtbassoc-0e74c700a5cb3d205]
+aws_nat_gateway.nat: Refreshing state... [id=nat-00d230a22bf80796b]
+aws_route_table.private: Refreshing state... [id=rtb-02459a6ad1bc3520e]
+aws_route_table_association.private[0]: Refreshing state... [id=rtbassoc-01a2a95f2a7f8011a]
+aws_route_table_association.private[1]: Refreshing state... [id=rtbassoc-0cf510ccac0864982]
+data.aws_iam_policy_document.github_actions_assume_role: Reading...
+data.aws_iam_policy_document.github_actions_assume_role: Read complete after 0s [id=179651082]
+aws_iam_role.github_actions_deploy: Refreshing state... [id=hireflow-github-deploy-role]
+aws_iam_role_policy_attachment.eks_cni_policy: Refreshing state... [id=hireflow-eks-node-role-20261016235510374800000001]
+aws_iam_role_policy_attachment.eks_worker_node_policy: Refreshing state... [id=hireflow-eks-node-role-20261016235510689200000004]
+aws_iam_role_policy_attachment.ec2_container_registry_read: Refreshing state... [id=hireflow-eks-node-role-20261016235510439500000003]
+aws_iam_role_policy_attachment.eks_cluster_policy: Refreshing state... [id=hireflow-eks-cluster-role-20261016235510432800000002]
+aws_iam_role_policy_attachment.ebs_csi: Refreshing state... [id=hireflow-ebs-csi-role-20261016235510743300000005]
+aws_eks_cluster.main: Refreshing state... [id=hireflow-eks]
+aws_iam_role_policy.github_actions_describe_cluster: Refreshing state... [id=hireflow-github-deploy-role:hireflow-describe-eks]
+aws_eks_node_group.workers: Refreshing state... [id=hireflow-eks:hireflow-workers]
+aws_eks_addon.metrics_server: Refreshing state... [id=hireflow-eks:metrics-server]
+aws_eks_addon.pod_identity_agent: Refreshing state... [id=hireflow-eks:eks-pod-identity-agent]
+aws_eks_addon.ebs_csi: Refreshing state... [id=hireflow-eks:aws-ebs-csi-driver]
+No changes. Your infrastructure matches the configuration.
+Terraform has compared your real infrastructure against your configuration
+and found no differences, so no changes are needed.
