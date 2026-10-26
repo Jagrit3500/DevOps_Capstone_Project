@@ -49,3 +49,6 @@ Thumbs.db
 # AWS credentials — extra safety net
 .aws/credentials
 credentials
+
+# Personal recording preparation and internal working notes
+.local-notes/

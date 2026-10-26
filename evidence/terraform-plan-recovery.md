@@ -8,7 +8,7 @@ Summary: **Plan: 26 to add, 0 to change, 0 to destroy.**
 
 The linked text preserves the original message, including its command and resource plan. This is archived original output, not a newly executed plan or an original screenshot. The original screenshot was not found among the inspected provisioning-period images.
 
-The initial plan used t3.medium workers; that unsupported instance type was subsequently changed to c7i-flex.large, as documented in AUDIT.md. This historical plan must not be presented as the current configuration. The separate current plan screenshots show the live stack has no drift.
+The initial plan used t3.medium workers; that unsupported instance type was subsequently changed to c7i-flex.large, as reflected in the current Terraform configuration and AWS node-group screenshot. This historical plan must not be presented as the current configuration. The separate current plan screenshots show the live stack has no drift.
 
 [Original plan text](terraform-original-creation-plan.txt)
 

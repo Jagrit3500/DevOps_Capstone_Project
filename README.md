@@ -321,7 +321,7 @@ Full docs: **http://localhost:8000/docs**
 | M7 - Terraform | VPC, EKS, EBS CSI, and Metrics Server applied in `ap-south-1`; fmt, validate, and [a captured no-drift plan](evidence/terraform-current-plan.txt) passed. [AWS Console evidence](evidence/aws-eks.png) and [current plan screenshot](evidence/terraform-plan-result.png) captured; [recovered original plan](evidence/terraform-original-plan-archived.png) captured with provenance; post-evaluation teardown proof remains. |
 | M8 — Kubernetes + Helm | Two backend and two frontend Pods ready, PostgreSQL running, HPA metrics present, frontend/backend Services are ClusterIP, and Ingress routes `/` and `/api` through ingress-nginx. Argo CD reports Synced and Healthy. |
 | M9 — Observability | Prometheus target UP and Grafana application panels populated; [metrics](evidence/backend-metrics.txt), [Prometheus](evidence/prometheus-targets.png), and [Grafana](evidence/grafana-dashboard.png) evidence captured. |
-| M10 — Documentation | README and audit present; see `demo/` for presentation artifacts and remaining submission steps. |
+| M10 — Documentation | Technical README and PDF slide deck present; the genuine walkthrough video remains to be uploaded. |
 
 
 ## Configuration and limitations
@@ -330,7 +330,9 @@ Database credentials come from ignored environment configuration locally and the
 
 This capstone exposes a public HTTP API without authentication or TLS. Use fictional records. Database backups, production access control, TLS, and high-availability PostgreSQL are outside the grading requirements. The UI implements the candidate pipeline; calendar and account settings are not implemented or advertised. AWS regional and Docker registry DNS has intermittently failed on this workstation; retry connectivity before changing infrastructure.
 
-The full requirement audit is in [AUDIT.md](AUDIT.md), with [evidence](EVIDENCE.md), a [slide deck](demo/HireFlow_Presentation.pdf), and the [recording guide](demo/VIDEO_SCRIPT.md). AWS Console and terminal screenshots are collected. The original creation-plan transcript and a labelled archived-output screenshot have been recovered. A genuine video and post-evaluation teardown proof remain required. Do not describe the submission as complete until these items and the course form are handled.
+Submission artifacts include the [evidence index](EVIDENCE.md) and [slide deck](demo/HireFlow_Presentation.pdf). AWS Console and terminal screenshots are collected. The original creation-plan transcript and a labelled archived-output screenshot have been recovered. The genuine walkthrough video, course form submission, and post-evaluation teardown proof remain outstanding.
+
+The recording must present the slides first, followed by the codebase, a new push and complete CI/CD run, Terraform plan and AWS Console, Argo CD, Kubernetes, Prometheus Targets, and Grafana. Save the finished MP4 under `demo/` or upload it as a GitHub release asset and link it here.
 
 Verify either the local or public deployment without leaving a test record:
 

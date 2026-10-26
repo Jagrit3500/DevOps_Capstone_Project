@@ -1,6 +1,6 @@
 # HireFlow submission evidence
 
-Verified against the instructor's [grading rubric](https://github.com/Nency-Ravaliya/devsecops-python/blob/main/GRADING.md) on 20 October 2026. See [AUDIT.md](AUDIT.md) for the requirement matrix and limitations.
+Evidence collected against the instructor's [grading rubric](https://github.com/Nency-Ravaliya/devsecops-python/blob/main/GRADING.md). The root [README](README.md) describes the architecture, setup, module checklist, and limitations. Dates below identify when each verification was performed.
 
 ## Application, tests, and containers
 
@@ -22,16 +22,15 @@ Verified against the instructor's [grading rubric](https://github.com/Nency-Rava
 - [Public application through Ingress](evidence/live-ingress-app.png). HTTP checks returned 200 from `/`, healthy JSON from `/health`, and `[]` from `/api/candidates/`.
 - [Terraform no-drift plan](evidence/terraform-current-plan.txt). The infrastructure was already provisioned when this plan was captured. Do not present it as the original nonempty creation plan.
 - [Backend Prometheus metrics](evidence/backend-metrics.txt), [Prometheus target UP](evidence/prometheus-targets.png), and [Grafana live dashboard](evidence/grafana-dashboard.png). A fresh Prometheus query on 20 October returned `up=1` for `hireflow-backend`.
-- [Troubleshooting exercise](evidence/troubleshooting-demo.txt): deliberate bad image and Service selector, with temporary resources removed.
 
 ## Presentation
 
 - [Ten-page PDF slide deck](demo/HireFlow_Presentation.pdf) covers overview, stack, architecture, CI/CD, infrastructure, Kubernetes, observability, and lessons.
-- [Recording guide](demo/VIDEO_SCRIPT.md) gives the required sequence, commands, and screens. A real MP4 walkthrough has **not** been recorded. The [submission instructions](https://github.com/Nency-Ravaliya/devsecops-python/blob/main/SUBMISSION.md) say the MP4 is mandatory and must show live tools.
+- The real MP4 walkthrough remains outstanding. The [submission instructions](https://github.com/Nency-Ravaliya/devsecops-python/blob/main/SUBMISSION.md) require slides followed by a live demonstration, including a new push and complete CI/CD run. Upload the finished video under `demo/` or as a GitHub release asset, and add its link here.
 
 ## Evidence still to capture
 
-1. Genuine walkthrough MP4 following `demo/VIDEO_SCRIPT.md`.
+1. Genuine walkthrough MP4 covering the sequence in the submission instructions.
 2. Successful `terraform destroy` screenshot **after** the evaluation; the live stack is being preserved for the walkthrough and currently incurs AWS charges.
 
 Keep credentials, database passwords, and Grafana admin passwords out of screenshots and video.
@@ -39,7 +38,6 @@ Keep credentials, database passwords, and Grafana admin passwords out of screens
 
 ## Final audit checks (20 October 2026)
 
-- [Instructor repository file inventory](evidence/reference-review.txt) records every tracked file and reviewed source revision.
 - [Current automated validation](evidence/audit-validation.txt) contains the 22-case backend result and two frontend API test results. The earlier pytest screenshot shows the 19-case suite before the audit fixes.
 - [Current Terraform plan](evidence/terraform-current-plan.txt) is a full-refresh, no-drift plan, not the original creation plan.
 - [Current live verification](evidence/final-live-verification.txt) records public API smoke checks, resource readiness, Argo CD, Prometheus, Grafana, and Helm releases.
